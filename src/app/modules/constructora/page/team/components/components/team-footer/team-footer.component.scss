@@ -1,0 +1,44 @@
+// Estilos para el footer de equipos
+.pagination-container {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+.page-info {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.pagination-button {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #374151;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.active {
+    background: #667eea;
+    border-color: #667eea;
+    color: #ffffff;
+  }
+}
+
+.items-per-page {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+} 

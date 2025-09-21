@@ -1,0 +1,99 @@
+<ng-container>
+  <!-- Checkbox para selección de usuarios -->
+  <td class="text-center">
+      <input
+          [(ngModel)]="user.selected"
+          class="checkbox checkbox-sm"
+          type="checkbox"
+          [value]="user.uid" />
+  </td>
+
+  <!-- Nombre del usuario -->
+  <td>
+      <div class="flex items-center gap-2.5">
+          <img
+              alt="{{ user.name }}"
+              class="h-9 w-9 shrink-0 rounded-md"
+              [src]="user.image || 'https://via.placeholder.com/150'" />
+          <div class="flex flex-col">
+              <a class="text-sm font-semibold text-foreground hover:text-primary" href="#">
+                  {{ user.name }}
+              </a>
+              <span class="text-xs font-medium text-muted-foreground/70">
+                  {{ user.email }}
+              </span>
+          </div>
+      </div>
+  </td>
+
+  <!-- Correo Electrónico -->
+  <!-- <td>{{ user.email }}</td> -->
+
+  <!-- Rol -->
+  <td
+    [ngClass]="{
+        'text-red-600 font-semibold': user.Roles[0] === 'admin',
+        'text-blue-600 font-semibold': user.Roles[0] === 'user'
+    }"
+    class="text-center text-sm tracking-wide capitalize"
+    >
+    {{ user.Roles[0] }}
+  </td>
+
+
+  
+  
+
+  <!-- Fecha de creación -->
+  <td>{{ user.createdAt | date:'short' }}</td>
+
+  <!-- Imagen de perfil -->
+  <!-- <td class="w-[100px]">
+      <img 
+          alt="{{ user.name }} Imagen" 
+          class="h-9 w-9 rounded-md"
+          [src]="user.image || 'https://via.placeholder.com/150'" />
+  </td> -->
+
+  <!-- Estado (Activo/Inactivo) -->
+    <!-- <td>
+        <span class="rounded-[30px] px-2 py-0.5 text-xs font-medium"
+            [ngClass]="user.selected ? 'bg-green-500/10 text-green-800' : 'bg-red-500/10 text-red-800'">
+            {{ user.selected ? 'Sesión abierta' : 'Sesión cerrada' }}
+        </span>
+    </td> -->
+
+  <!-- Botón de edición -->
+  <td class="text-center">
+      <button class="flex h-7 w-7 items-center justify-center rounded-md text-blue-500 hover:bg-card hover:text-foreground" (click)="deleteUser(user.uid)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+              <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+              <path d="M16 5l3 3" />
+          </svg>
+      </button>
+  </td>
+
+  <!-- Botón de eliminación con modal -->
+  <td class="text-center">
+      <button class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground" (click)="openDeleteModal(user.uid)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M4 7l16 0" />
+              <path d="M10 11l0 6" />
+              <path d="M14 11l0 6" />
+              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+          </svg>
+      </button>
+  </td>
+
+  <!-- Botón de ver detalles -->
+  <td class="text-center">
+      <button class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-card hover:text-foreground">
+          <span class="flex-none rounded-md bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground hover:bg-primary-dark transition"
+              [routerLink]="['/constructora/user', user.uid]">Ver</span>
+      </button>
+  </td>
+</ng-container>

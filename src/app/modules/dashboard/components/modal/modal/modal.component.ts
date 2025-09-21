@@ -1,0 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-modal',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './modal.component.html',
+  styleUrl: './modal.component.scss'
+})
+export class ModalComponent {
+  @Input() isOpen = false;
+  @Output() confirm = new EventEmitter<'pdf' | 'csv'>();
+  @Output() cancel = new EventEmitter<void>();
+
+  confirmExport() {
+    this.confirm.emit();
+  }
+
+  cancelExport() {
+    this.cancel.emit();
+  }
+}

@@ -1,0 +1,61 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg relative">
+    <div class="text-left mb-4">
+      <button (click)="goBack()" class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M5 12l14 0"/>
+          <path d="M5 12l6 6"/>
+          <path d="M5 12l6 -6"/>
+        </svg>
+      </button>
+    </div>
+  
+    <!-- Indicador de estado (verde si está completada, rojo si no) -->
+    <div class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-white"
+      [ngClass]="{ 'bg-green-500': task?.completed, 'bg-red-500': !task?.completed }">
+    </div>
+  
+    <!-- Imagen y título de la tarea -->
+    <div class="text-center mb-6">
+      <div class="w-36 h-36 rounded-full mx-auto mb-4 border-4 border-gray-200 shadow-md bg-gray-200 flex items-center justify-center">
+        <span class="text-xl font-semibold text-gray-600">{{ task?.assignedTo?.charAt(0)?.toUpperCase() || '' }}</span>
+      </div>
+      <h1 class="text-3xl font-semibold text-primary">{{ task?.title }}</h1>
+      <p class="text-sm text-gray-500 mt-1">Prioridad: {{ task?.priority }}</p>
+    </div>
+  
+    <!-- Descripción y detalles de la tarea -->
+    <div class="w-full space-y-3 text-left mb-6">
+      <p class="text-gray-700 leading-relaxed">
+        {{ task?.description || 'Sin descripción disponible.' }}
+      </p>
+  
+      <div class="flex items-center space-x-2">
+        <p class="text-xl font-semibold text-gray-900">Fecha de vencimiento:</p>
+        <p class="text-lg text-gray-800 font-semibold">{{ task?.dueDate || 'No establecida' }}</p>
+      </div>
+  
+      <p class="text-sm text-gray-600">
+        Creado el: {{ task?.createdAt | date:'medium' }}
+      </p>
+  
+      <!-- Estado de la tarea -->
+      <p class="text-sm text-gray-600">
+        Estado de la tarea:
+        <span [ngClass]="{ 'text-green-600': task?.completed, 'text-red-600': !task?.completed }">
+          {{ task?.completed ? 'Completada' : 'Pendiente' }}
+        </span>
+      </p>
+  
+      <p class="text-sm text-gray-600">
+        Asignado a: <span class="font-semibold">{{ task?.assignedTo }}</span>
+      </p>
+  
+      <div class="flex flex-wrap gap-2">
+        <span *ngFor="let tag of task?.tags" class="text-sm text-gray-600 bg-gray-200 py-1 px-3 rounded-full">
+          {{ tag }}
+        </span>
+      </div>
+    </div>
+  </div>
+  

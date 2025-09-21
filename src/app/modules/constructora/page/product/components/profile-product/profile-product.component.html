@@ -1,0 +1,67 @@
+<div class="max-w-lg mx-auto p-6 bg-gray-100 rounded-lg shadow-lg relative">
+  <div class="text-left mb-4">
+    <button (click)="goBack()" class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+    </button>
+  </div>
+  <div
+    class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-white"
+    [ngClass]="{ 'bg-green-500': product?.isActive, 'bg-red-500': !product?.isActive }">
+  </div>
+  <div class="text-center mb-6">
+    <img
+      [src]="product?.imageUrl || 'https://img.freepik.com/vector-premium/vector-icono-imagen-predeterminado-pagina-imagen-faltante-diseno-sitio-web-o-aplicacion-movil-no-hay-foto-disponible_87543-11093.jpg'"
+      alt="Imagen del producto"
+      class="w-36 h-36 object-cover rounded-full mx-auto mb-4 border-4 border-gray-200 shadow-md" />
+    <p class="text-sm text-gray-600 font-semibold">
+      <span [ngClass]="{ 'text-green-600 bg-green-200 px-3 py-1 rounded-full': product?.availabilityStatus === 'enStock', 'text-red-600 bg-red-200 px-3 py-1 rounded-full': product?.availabilityStatus !== 'enStock' }">
+        {{ product?.availabilityStatus === 'enStock' ? 'En stock' : 'Agotado' }}
+      </span>
+    </p>
+  </div>
+
+  <div class="pb-2">
+      <h1 class="text-3xl font-semibold text-primary">{{ product?.name }}</h1>
+  </div>
+
+  <div class="flex justify-between items-center">
+    <div class="flex">
+      <div class="flex items-center space-x-1">
+        <div class="flex items-end space-x-0.5 text-xl">
+          <span [ngClass]="'text-yellow-500'">
+            &#9733;
+          </span>
+        </div>
+        <p class="text-sm text-gray-600">(4.0)</p>
+      </div>
+      <div class="text-sm flex items-center">
+        <p class="pl-2 ml-2 border-l border-gray-300">Stock: {{ product?.stock || 0 }}</p>
+      </div>
+    </div>
+    <p class="grid">
+      <span class="text-sm font-semibold text-primary line-through text-end">${{ product?.price }}</span>
+      <span class="text-xl font-semibold text-red-600 ml-2">${{ product?.discountPrice }}</span>
+    </p>
+  </div>
+
+
+  <div class="border-t border-gray-300 mt-3 pt-2">
+    <h2 class="text-base font-semibold text-start text-gray-400">Descripción</h2>
+    <p class="text-gray-700 text-sm">
+      Cargador inalámbrico rápido y compacto, compatible con múltiples dispositivos, ideal para uso diario y viajes
+    </p>
+  </div>
+
+  <div class="border-t border-gray-300 mt-3 pt-2">
+    <h2 class="text-base font-semibold text-start text-gray-400">Creación</h2>
+    <p class="text-gray-700 text-sm">
+      {{ product?.createdAt | date:'medium' }}
+    </p>
+  </div>
+  <div class="border-t border-gray-300 mt-3 pt-2">
+    <h2 class="text-base font-semibold text-start text-gray-400">Actualización</h2>
+    <p class="text-gray-700 text-sm">
+      Última actualización: {{ product?.updatedAt ? (product?.updatedAt | date:'medium') : 'No actualizado' }}
+    </p>
+  </div>
+</div>

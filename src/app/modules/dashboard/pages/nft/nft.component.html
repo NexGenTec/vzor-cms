@@ -1,0 +1,50 @@
+<div>
+  <!-- Header -->
+  <app-nft-header></app-nft-header>
+  <!-- end Header -->
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+    <!-- Dual Card -->
+    <div nft-dual-card class="md:col-span-2"></div>
+    <!-- end Dual Card -->
+
+    <!-- Loading Skeleton -->
+    <ng-container *ngIf="isLoading">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-1" *ngFor="let _ of [1, 2]">
+        <div class="animate-pulse">
+          <div class="h-[420px] flex flex-col rounded-lg bg-gray-300"></div>
+        </div>
+      </div>
+    </ng-container>    
+
+    <!-- Product Cards or Fallback -->
+    <ng-container *ngIf="!isLoading">
+      <ng-container *ngFor="let productItem of [product[0], product[1]]; let i = index">
+        <div *ngIf="productItem; else noProduct" nft-single-card [product]="productItem"></div>
+        <ng-template #noProduct>
+          <div class="flex h-[420px] flex-col rounded-lg bg-background p-8">
+            <div
+              class="h-[340px] cursor-pointer rounded-md bg-gray-100"
+              [ngStyle]="{
+                'background-image': 'url(https://img.freepik.com/free-vector/coming-soon-message-illuminated-with-stage-light_1284-3612.jpg)',
+                'background-position': 'center',
+                'background-size': '100%',
+                'background-repeat': 'no-repeat'
+              }">
+            </div>
+            <h2 class="mt-4 text-2xl font-extrabold text-gray-700 tracking-wide">
+              Aún no hay productos disponibles
+            </h2>            
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+
+    <!-- Chart Card -->
+    <div nft-chart-card class="md:col-span-2 xl:col-span-1"></div>
+    <!-- end Chart Card -->
+
+    <!-- Auctions Table -->
+    <div nft-auctions-table class="md:col-span-2 xl:col-span-3"></div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-8">
+  <div class="mx-auto max-w-screen-lg px-4 2xl:px-0">
+    <div class="py-4 md:py-8">
+      <div class="mb-4 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:gap-16">
+        <!-- Skeleton Loader -->
+        <div *ngIf="!user" class="space-y-4">
+          <div class="flex space-x-4">
+            <div class="h-16 w-16 rounded-lg bg-gray-300 animate-pulse"></div>
+            <div>
+              <div class="mb-2 h-4 bg-gray-300 rounded w-32 animate-pulse"></div>
+              <div class="h-6 bg-gray-300 rounded w-40 animate-pulse"></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="h-4 bg-gray-300 rounded w-32 animate-pulse"></div>
+            <div class="h-4 bg-gray-300 rounded w-48 animate-pulse"></div>
+          </div>
+        </div>
+
+        <!-- Datos del Usuario -->
+        <div *ngIf="user" class="space-y-4">
+          <div class="flex space-x-4">
+            <img class="h-16 w-16 rounded-lg" [src]="user.image || 'default-avatar-url'" alt="{{ user.name }} avatar" />
+            <div>
+              <h2 class="flex items-center text-xl font-bold leading-none text-gray-900 dark:text-white sm:text-2xl">{{ user.name }}</h2>
+            </div>
+          </div>
+
+          <!-- Información adicional del Usuario -->
+          <dl class="space-y-2">
+            <dt class="font-semibold text-gray-900 dark:text-white">Dirección de Correo Electrónico</dt>
+            <dd class="text-gray-500 dark:text-gray-400">{{ user.email }}</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

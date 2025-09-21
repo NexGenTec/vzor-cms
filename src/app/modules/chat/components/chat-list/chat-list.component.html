@@ -1,0 +1,145 @@
+<div class="flex h-screen antialiased bg-gray-50">
+  <div class="flex flex-row h-full w-full overflow-hidden">
+    <!-- Panel Lateral -->
+    <div class="flex flex-col py-6 px-4 w-72 bg-white flex-shrink-0 border-r shadow-md">
+      <!-- Encabezado -->
+      <div class="text-xl font-bold text-gray-800">Chat</div>
+
+      <!-- Conversaciones Activas -->
+      <div class="mt-4 h-96 overflow-y-auto space-y-4">
+        <!-- Skeleton mientras carga -->
+        <div *ngIf="loadingChats; else chatList">
+          <div class="space-y-3">
+            <div 
+              class="flex items-center space-x-3 animate-pulse"
+              *ngFor="let _ of [1, 2, 3]">
+              <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+              <div class="flex-1 space-y-2">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>          
+        </div>
+        <!-- Lista de chats -->
+        <ng-template #chatList>
+          <div 
+            class="flex items-center p-3 rounded-lg bg-white shadow hover:shadow-lg transition-all cursor-pointer"
+            *ngFor="let chatRoom of chatRooms"
+            (click)="selectChat(chatRoom.id)"
+          >
+            <div class="flex items-center justify-center h-12 w-12 bg-blue-100 rounded-full">
+              <img *ngIf="chatRoom.userImage; else initials" [src]="chatRoom.userImage" alt="Imagen del chat" class="h-full w-full object-cover rounded-full">
+              <ng-template #initials>
+                <span class="text-gray-700">{{ chatRoom.name?.charAt(0) || '' }}</span>
+              </ng-template>
+            </div>
+            <div class="ml-3 flex-1">
+              <div class="font-semibold text-gray-800">{{ chatRoom.name }}</div>
+              <div class="text-xs text-gray-500">{{ chatRoom.members?.length }} miembros</div>
+            </div>
+            <div class="flex space-x-2">
+              <!-- Botones de acciones -->
+              <button 
+                class="bg-yellow-500 text-white text-xs p-1 rounded-full hover:bg-yellow-600"
+                (click)="archiveChat(chatRoom.id)"
+              >
+              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-archive"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" /><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" /><path d="M10 12l4 0" /></svg>
+              </button>
+              <button 
+                class="bg-red-500 text-white text-xs p-1 rounded-full hover:bg-red-600"
+                (click)="deleteChat(chatRoom.id)"
+              >
+              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Conversaciones Archivadas -->
+      <div class="mt-8">
+        <div class="flex justify-between items-center text-sm font-medium text-gray-600">
+          <span>Archivadas</span>
+          <span class="bg-gray-300 text-gray-800 rounded-full h-5 w-5 flex items-center justify-center text-xs">
+            {{ archivedChatRooms.length }}
+          </span>
+        </div>
+        <div class="mt-4 h-60 overflow-y-auto space-y-2">
+          <!-- Skeleton mientras carga -->
+          <div *ngIf="loadingArchivedChats; else archivedChatList">
+            <div class="space-y-3">
+              <div 
+                class="flex items-center space-x-3 animate-pulse" 
+                *ngFor="let _ of [1, 2,3,4]">
+                <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            </div>            
+          </div>
+          <!-- Lista de archivados -->
+          <ng-template #archivedChatList>
+            <div 
+              class="flex items-center p-3 rounded-lg bg-white shadow hover:shadow-lg transition-all cursor-pointer"
+              *ngFor="let chatRoom of archivedChatRooms"
+              (click)="selectChat(chatRoom.id)"
+            >
+              <div class="flex items-center justify-center h-10 w-10 bg-indigo-100 rounded-full">
+                <span class="text-gray-700">{{ chatRoom.name?.charAt(0) || '' }}</span>
+              </div>
+              <div class="ml-3 text-gray-800 font-semibold">
+                {{ chatRoom.name }}
+              </div>
+              <div class="ml-3">
+                <button
+                  (click)="unarchiveChat(chatRoom.id)"
+                  class="bg-blue-500 text-white text-xs p-1 rounded-full hover:bg-blue-600"
+                >
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-archive"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" /><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" /><path d="M10 12l4 0" /></svg>
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <!-- Usuarios Disponibles -->
+      <div class="mt-8">
+        <div class="flex justify-between items-center text-sm font-medium text-gray-600">
+          <span>Usuarios Disponibles</span>
+          <span class="bg-gray-300 text-gray-800 rounded-full h-5 w-5 flex items-center justify-center text-xs">
+            {{ users.length }}
+          </span>
+        </div>
+        <div class="mt-4 h-80 overflow-y-auto space-y-2">
+          <!-- Skeleton mientras carga -->
+          <div *ngIf="loadingUsers; else userList" class="space-y-3">
+            <div 
+              class="flex items-center space-x-3 animate-pulse" 
+              *ngFor="let _ of [1, 2, 3, 4, 5, 6]">
+              <div class="h-10 w-10 bg-gray-200 rounded-full"></div>
+              <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            </div>
+          </div>            
+          <!-- Lista de usuarios -->
+          <ng-template #userList>
+            <div 
+              class="flex items-center p-3 rounded-lg bg-white shadow hover:shadow-lg transition-all cursor-pointer"
+              *ngFor="let user of users"
+              (click)="selectUser(user)"
+            >
+              <div class="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
+                <img *ngIf="user.image; else initials" [src]="user.image" alt="Imagen de usuario" class="h-full w-full object-cover rounded-full">
+                <ng-template #initials>
+                  <span class="text-gray-700">{{ user.name[0] }}</span>
+                </ng-template>
+              </div>
+              <div class="ml-3 text-gray-800 font-semibold">
+                {{ user.name }}
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

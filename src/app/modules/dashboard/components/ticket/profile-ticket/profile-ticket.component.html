@@ -1,0 +1,64 @@
+<div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg relative">
+    <div class="text-left mb-4">
+      <button (click)="goBack()" class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M5 12l14 0" />
+          <path d="M5 12l6 6" />
+          <path d="M5 12l6 -6" />
+        </svg>
+      </button>
+    </div>
+  
+    <!-- Indicador de estado (verde si está abierto, amarillo si está en proceso, rojo si está cerrado) -->
+    <div
+      class="absolute top-4 right-4 w-4 h-4 rounded-full border-2 border-white"
+      [ngClass]="{ 
+        'bg-green-500': ticket?.estado === 'Abierto', 
+        'bg-yellow-500': ticket?.estado === 'En Proceso', 
+        'bg-red-500': ticket?.estado === 'Cerrado' 
+      }">
+    </div>
+  
+    <!-- Título y categoría del ticket -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-semibold text-primary">{{ ticket?.titulo }}</h1>
+      <p class="text-sm text-gray-500 mt-1">Categoría: {{ ticket?.categoria || 'Sin categoría' }}</p>
+    </div>
+  
+    <!-- Descripción y detalles del ticket -->
+    <div class="w-full space-y-3 text-left mb-6">
+      <p class="text-gray-700 leading-relaxed">
+        {{ ticket?.descripcion || 'Sin descripción disponible.' }}
+      </p>
+  
+      <div class="flex items-center space-x-2">
+        <p class="text-xl font-semibold text-gray-900">Prioridad:</p>
+        <p class="text-lg text-gray-800 font-semibold">{{ ticket?.prioridad }}</p>
+      </div>
+  
+      <p class="text-sm text-gray-600">
+        Fecha de creación: <span class="font-semibold">{{ ticket?.fechaCreacion | date:'medium' }}</span>
+      </p>
+  
+      <p class="text-sm text-gray-600">
+        Estado: 
+        <span [ngClass]="{
+          'text-green-600': ticket?.estado === 'Abierto',
+          'text-yellow-600': ticket?.estado === 'En Proceso',
+          'text-red-600': ticket?.estado === 'Cerrado'
+        }">
+          {{ ticket?.estado }}
+        </span>
+      </p>
+  
+      <p class="text-sm text-gray-600">
+        Asignado a: <span class="font-semibold">{{ ticket?.asignadoA || 'No asignado' }}</span>
+      </p>
+  
+      <p class="text-sm text-gray-600" *ngIf="ticket?.fechaCierre">
+        Fecha de cierre: <span class="font-semibold">{{ ticket?.fechaCierre | date:'medium' }}</span>
+      </p>
+    </div>
+</div>
+  

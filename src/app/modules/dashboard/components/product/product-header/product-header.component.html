@@ -1,0 +1,29 @@
+<ng-container>
+  <!-- Checkbox para selección múltiple -->
+  <th class="w-[50px]">
+    <input 
+      (change)="toggle($event)" 
+      class="checkbox checkbox-sm" 
+      data-datatable-check="true" 
+      type="checkbox" 
+    />
+  </th>
+  <!-- Producto (nombre e imagen) -->
+  <th class="min-w-[140px]">Producto</th>
+
+  <!-- Categoría -->
+  <th class="min-w-[180px]">Categoría</th>
+
+  <!-- Precio -->
+  <th class="min-w-[180px]">Precio</th>
+
+  <!-- Stock -->
+  <th class="min-w-[180px]">Stock</th>
+
+  <!-- Estado (Activo/Inactivo) -->
+  <th class="min-w-[150px]">Estado</th>
+
+  <!-- Botones de acciones -->
+  <th class="w-[60px] text-center">Acciones</th>
+  <th class="w-[60px] text-center">Eliminar</th>
+</ng-container>

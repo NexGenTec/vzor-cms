@@ -1,0 +1,131 @@
+<div>
+  <!-- Header -->
+  <app-constructora-header></app-constructora-header>
+  <!-- end Header -->
+
+  <!-- Loading Skeleton -->
+  <ng-container *ngIf="isLoading">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+      <div class="animate-pulse" *ngFor="let _ of [1, 2, 3, 4]">
+        <div class="h-32 rounded-lg bg-gray-300"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+      <div class="animate-pulse" *ngFor="let _ of [1, 2, 3, 4]">
+        <div class="h-[420px] flex flex-col rounded-lg bg-gray-300"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Dashboard Content -->
+  <ng-container *ngIf="!isLoading">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+      <!-- Total Tasks Card -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Tareas</p>
+            <p class="text-3xl font-bold text-gray-900">{{ totalTasks() }}</p>
+            <p class="text-sm text-gray-500 mt-1">
+              <span class="text-green-600">{{ completedTasks() }} completadas</span> / 
+              <span class="text-yellow-600">{{ pendingTasks() }} pendientes</span>
+            </p>
+          </div>
+          <div class="p-3 bg-blue-100 rounded-full">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Projects Card -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Proyectos</p>
+            <p class="text-3xl font-bold text-gray-900">{{ totalProjects() }}</p>
+            <p class="text-sm text-gray-500 mt-1">
+              <span class="text-green-600">{{ activeProjects() }} activos</span>
+            </p>
+          </div>
+          <div class="p-3 bg-green-100 rounded-full">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Teams Card -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Equipos</p>
+            <p class="text-3xl font-bold text-gray-900">{{ totalTeams() }}</p>
+            <p class="text-sm text-gray-500 mt-1">
+              <span class="text-green-600">{{ activeTeams() }} activos</span>
+            </p>
+          </div>
+          <div class="p-3 bg-purple-100 rounded-full">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Products Card -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Productos</p>
+            <p class="text-3xl font-bold text-gray-900">{{ totalProducts() }}</p>
+            <p class="text-sm text-gray-500 mt-1">Disponibles</p>
+          </div>
+          <div class="p-3 bg-orange-100 rounded-full">
+            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+      <!-- Dual Card -->
+      <div app-constructora-dual-card class="md:col-span-2"></div>
+      <!-- end Dual Card -->
+
+      <!-- Product Cards or Fallback -->
+      <ng-container *ngFor="let productItem of [product()[0], product()[1]]; let i = index">
+        <div *ngIf="productItem; else noProduct" app-constructora-single-card [product]="productItem"></div>
+        <ng-template #noProduct>
+          <div class="flex h-[420px] flex-col rounded-lg bg-background p-8">
+            <div
+              class="h-[340px] cursor-pointer rounded-md bg-gray-100"
+              [ngStyle]="{
+                'background-image': 'url(https://img.freepik.com/free-vector/coming-soon-message-illuminated-with-stage-light_1284-3612.jpg)',
+                'background-position': 'center',
+                'background-size': '100%',
+                'background-repeat': 'no-repeat'
+              }">
+            </div>
+            <h2 class="mt-4 text-2xl font-extrabold text-gray-700 tracking-wide">
+              Aún no hay productos disponibles
+            </h2>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <!-- Chart Card -->
+      <div app-constructora-chart-card class="md:col-span-2 xl:col-span-1"></div>
+      <!-- end Chart Card -->
+
+      <!-- Auctions Table -->
+      <div app-constructora-auctions-table class="md:col-span-2 xl:col-span-3"></div>
+    </div>
+  </ng-container>
+</div>

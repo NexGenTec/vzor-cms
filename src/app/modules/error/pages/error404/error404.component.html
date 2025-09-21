@@ -1,0 +1,11 @@
+<div
+  class="flex max-w-lg flex-col items-center justify-center gap-2 rounded-lg bg-background p-8 text-center shadow-sm">
+  <h1 class="text-4xl font-bold text-foreground">¡Ups!</h1>
+  <p class="text-base text-muted-foreground">
+    No podemos encontrar esa página. Puedes volver a la página anterior o ir a la página de inicio.
+  </p>
+  <app-button (buttonClick)="goToHomePage()" impact="bold" tone="primary" shape="rounded" size="medium">
+    Página de inicio
+  </app-button>
+  <svg-icon src="assets/illustrations/404.svg" svgClass="w-[300px] h-[300px] text-muted-foreground"> </svg-icon>
+</div>

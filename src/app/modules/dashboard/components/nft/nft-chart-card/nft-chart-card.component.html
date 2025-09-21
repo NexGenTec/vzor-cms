@@ -1,0 +1,43 @@
+<div class="flex-col rounded-lg bg-background px-8 py-8 sm:flex-row">
+  <!-- Card Header -->
+  <div class="mb-2 flex items-center justify-between">
+    <div class="flex-col">
+      <div class="flex items-center space-x-1">
+        <span class="text-primary">Tickets</span>
+      </div>
+      <span class="text-sm text-muted-foreground">Total de tickets: {{ totalTickets }} </span>
+    </div>
+  </div>
+  <!-- end Card Header -->
+
+  <!-- Card Body -->
+  <apx-chart
+    [series]="chartOptions.series!"
+    [chart]="chartOptions.chart!"
+    [dataLabels]="chartOptions.dataLabels!"
+    [fill]="chartOptions.fill!"
+    [stroke]="chartOptions.stroke!"
+    [xaxis]="chartOptions.xaxis!"
+    [yaxis]="chartOptions.yaxis!"
+    [tooltip]="chartOptions.tooltip!"
+    [plotOptions]="chartOptions.plotOptions!">
+  </apx-chart>
+  <!-- end Chart -->
+
+  <!-- Table -->
+  <table class="mt-4 w-full table-auto text-sm">
+    <thead>
+      <tr>
+        <th class="text-left font-semibold text-foreground hover:text-primary">Estado</th>
+        <th class="text-right font-semibold text-foreground hover:text-primary">Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of ticketCountByStatus; let i = index">
+        <td class="font-semibold text-foreground hover:text-primary py-2">{{ ticket.estado }}</td>
+        <td class="font-semibold text-foreground hover:text-primarypy-2 text-right">{{ ticket.cantidad }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- end Table -->
+</div>

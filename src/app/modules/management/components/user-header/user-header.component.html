@@ -1,0 +1,29 @@
+<ng-container>
+    <!-- Checkbox para selección múltiple -->
+    <th class="w-[50px]">
+        <input 
+            (change)="toggle($event)" 
+            class="checkbox checkbox-sm" 
+            data-datatable-check="true" 
+            type="checkbox" 
+        />
+    </th>
+
+    <!-- Nombre de usuario -->
+    <th class="min-w-[250px]">Nombre</th>
+
+    <!-- Correo electrónico -->
+    <!-- <th class="min-w-[250px]">Correo Electrónico</th> -->
+
+    <!-- Rol -->
+    <th class="min-w-[180px]">Rol</th>
+
+    <!-- Fecha de creación -->
+    <th class="min-w-[180px]">Fecha de Creación</th>
+
+    <!-- Estado (Activo/Inactivo) -->
+    <th class="min-w-[60px]">Editar</th>
+
+    <!-- Botones de acciones -->
+    <th class="w-[60px] text-center">Acciones</th>
+</ng-container>

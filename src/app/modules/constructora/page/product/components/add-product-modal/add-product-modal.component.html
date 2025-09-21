@@ -1,0 +1,285 @@
+<div class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-sm p-4 relative overflow-y-auto max-h-[80vh]">
+    <button 
+      (click)="closeModal()" 
+      class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+      aria-label="Cerrar Modal"
+    >
+      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Formulario de Producto -->
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <!-- Nombre del Producto -->
+        <div>
+          <label for="name" class="block text-sm font-semibold">Nombre del Producto</label>
+          <input 
+            id="name"
+            formControlName="name"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el nombre"
+            required
+          />
+          <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="text-red-500 text-xs mt-1">
+            El nombre es obligatorio.
+          </div>
+        </div>
+        
+
+        <!-- Descripción del Producto -->
+        <div>
+          <label for="description" class="block text-sm font-semibold">Descripción</label>
+          <textarea 
+            id="description"
+            formControlName="description"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese una descripción"
+            rows="3"
+          ></textarea>
+          <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="text-red-500 text-xs mt-1">
+            La descripción es obligatoria.
+          </div>
+        </div>
+
+
+        <!-- Categoría del Producto -->
+        <div>
+          <label for="category" class="block text-sm font-semibold">Categoría</label>
+          <select 
+            id="category"
+            formControlName="category"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            (change)="onCategoryChange($event)"
+            required
+          >
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option *ngFor="let category of categories" [value]="category.category">{{ category.category }}</option>
+            <option value="other">Otra categoria</option>
+          </select>
+          <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="text-red-500 text-xs mt-1">
+            La categoría es obligatoria.
+          </div>
+        </div>
+
+        <!-- Campo de texto para ingresar una categoría personalizada -->
+        <div *ngIf="isOtherCategorySelected">
+          <label for="customCategory" class="block text-sm font-semibold">Ingresa lu categoría</label>
+          <input 
+            id="customCategory"
+            formControlName="customCategory"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Escribe la categoría"
+          />
+        </div>
+
+        <!-- Precio del Producto -->
+        <div>
+          <!-- Precio -->
+          <label for="price" class="block text-sm font-semibold">Precio</label>
+          <input 
+            id="price"
+            formControlName="price"
+            type="number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Precio en CLP"
+            (input)="updateDiscountPercentage()"
+          />
+          <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="text-red-500 text-xs mt-1">
+            El precio debe ser mayor o igual a 0.
+          </div>
+        </div>
+
+        <!-- Stock del Producto -->
+        <div>
+          <label for="stock" class="block text-sm font-semibold">Stock</label>
+          <input 
+            id="stock"
+            formControlName="stock"
+            type="number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Cantidad disponible"
+            required
+          />
+          <div *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched" class="text-red-500 text-xs mt-1">
+            El stock es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-span-full">
+          <label for="cover-photo" class="block text-sm/6 font-medium text-gray-900">Imagen del producto</label>
+          <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+            <div class="text-center">
+              <svg class="mx-auto size-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+                <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" />
+              </svg>
+              <div class="mt-4 flex text-sm/6 text-gray-600">
+                <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                  <span>Subir un archivo</span>
+                  <input id="file-upload" name="file-upload" type="file" class="sr-only" (change)="onFileSelected($event)">
+                </label>
+                <p class="pl-1">o arrastra y suelta</p>
+              </div>
+              <p class="text-xs/5 text-gray-600">PNG, JPG, GIF hasta 10MB</p>
+        
+              <!-- Previsualización de la imagen -->
+              <div *ngIf="imagePreview" class="mt-4">
+                <img [src]="imagePreview" alt="Previsualización" class="rounded-lg max-w-full h-auto">
+                <p class="text-xs text-gray-600 mt-2">*Esta es la imagen que se cargó previamente. Si deseas cambiarla, sube una nueva imagen.</p>
+              </div>
+            </div>
+          </div>
+        </div> 
+
+        <div>
+          <!-- Etiquetas -->
+          <label for="tags" class="block text-sm font-semibold">Etiquetas</label>
+          <div class="flex gap-2 items-center">
+            <input 
+              id="tags"
+              formControlName="tags"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              placeholder="Añade una etiqueta"
+              (keyup.enter)="addTag()"
+            />
+            <button 
+              type="button"
+              class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary-dark transition"
+              (click)="addTag()"
+            >
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-code-variable-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 16h-7a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v1" /><path d="M16 18h6" /><path d="M19 15v6" /></svg>
+            </button>
+          </div>
+          <div *ngIf="productForm.get('tags')?.invalid && productForm.get('tags')?.touched" class="text-red-500 text-xs mt-1">
+            Ingresa etiquetas válidas.
+          </div>
+        
+          <!-- Lista de etiquetas -->
+          <div class="flex flex-wrap gap-2 mt-3">
+            <div 
+              *ngFor="let tag of tags; let i = index" 
+              class="bg-primary hover:bg-primary-dark transition text-sm px-3 py-1 rounded-md flex items-center"
+            >
+              <span>{{ tag }}</span>
+              <button 
+                type="button" 
+                class="ml-2 text-red-500 hover:text-red-700"
+                (click)="removeTag(i)"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        
+          <!-- Limitar etiquetas -->
+          <div *ngIf="tags.length >= maxTags" class="text-yellow-500 text-xs mt-1">
+            Has alcanzado el límite de 10 etiquetas.
+          </div>
+        </div>
+
+        <!-- Precio con descuento -->
+        <div>
+          <!-- Precio con descuento -->
+          <!-- <label for="discountPrice" class="block text-sm font-semibold">Precio con Descuento</label>
+          <input 
+            id="discountPrice"
+            formControlName="discountPrice"
+            type="number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Precio con descuento en CLP"
+            (input)="updateDiscountPercentage()"
+            [disabled]="!productForm.get('price')?.value || productForm.get('price')?.value <= 0"
+          />
+          <div *ngIf="productForm.get('discountPrice')?.invalid && productForm.get('discountPrice')?.touched" class="text-red-500 text-xs mt-1">
+            El precio con descuento debe ser mayor o igual a 0.
+          </div> -->
+        </div>
+
+        <!-- Porcentaje de descuento -->
+        <div>
+          <!-- Porcentaje de descuento -->
+          <!-- <label for="discountPercentage" class="block text-sm font-semibold">Porcentaje de Descuento</label>
+          <div class="relative">
+            <input 
+              id="discountPercentage"
+              formControlName="discountPercentage"
+              type="number"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md pr-10"
+              readonly
+              [disabled]="!productForm.get('price')?.value || productForm.get('price')?.value <= 0"
+            />
+            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+          </div> -->
+        </div>
+
+        <!-- Estado de disponibilidad -->
+        <div>
+          <label for="availabilityStatus" class="block text-sm font-semibold">Estado de Disponibilidad</label>
+          <select 
+            id="availabilityStatus"
+            formControlName="availabilityStatus"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="enStock">En Stock</option>
+            <option value="agotado">Agotado</option>
+            <option value="preOrden">Pre Orden</option>
+            <option value="descontinuado">Descontinuado</option>
+          </select>
+          <div *ngIf="productForm.get('availabilityStatus')?.invalid && productForm.get('availabilityStatus')?.touched" class="text-red-500 text-xs mt-1">
+            El estado de disponibilidad es obligatorio.
+          </div>
+          
+        </div>
+
+        <!-- Calificación -->
+        <div>
+          <label for="rating" class="block text-sm font-semibold">Calificación</label>
+          <div class="flex">
+            <svg *ngFor="let star of stars; let i = index"
+                [ngClass]="{'text-yellow-500': i < rating}"
+                (click)="setRating(i + 1)"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                class="w-6 h-6 cursor-pointer">
+              <path d="M10 15l-5.447 2.866L5.8 11.12 1 6.528l6.553-.53L10 0l2.447 5.968L19 6.528l-4.8 4.592 1.247 6.746L10 15z"/>
+            </svg>
+          </div>
+          <div *ngIf="productForm.get('rating')?.invalid && productForm.get('rating')?.touched" class="text-red-500 text-xs mt-1">
+            La calificación es obligatoria.
+          </div>
+        </div>
+
+        <!-- Estado de la tarea -->
+        <div>
+          <label for="isActive" class="block text-sm font-semibold">¿Está activo?</label>
+          <input 
+            id="isActive"
+            formControlName="isActive"
+            type="checkbox"
+            class="cursor-pointer"
+          />
+          <div *ngIf="productForm.get('isActive')?.invalid && productForm.get('isActive')?.touched" class="text-red-500 text-xs mt-1">
+            El estado de la tarea es obligatorio.
+          </div>
+        </div>
+
+        <!-- Botón de Agregar -->
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary-dark transition"
+            [disabled]="productForm.invalid"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

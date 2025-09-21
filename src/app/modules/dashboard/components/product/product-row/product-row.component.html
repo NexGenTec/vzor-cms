@@ -1,0 +1,92 @@
+<ng-container>
+  <!-- Checkbox para selección de productos -->
+  <td class="text-center">
+    <input
+      [(ngModel)]="product.selected"
+      class="checkbox checkbox-sm"
+      type="checkbox"
+      [value]="product.id" />
+  </td>
+
+  <!-- Información del producto (Nombre e Imagen) -->
+  <td>
+    <div class="flex items-center gap-2.5">
+      <img
+        alt="{{ product.name }}"
+        class="h-9 w-9 shrink-0 rounded-md"
+        [src]="product.imageUrl || 'https://img.freepik.com/vector-premium/vector-icono-imagen-predeterminado-pagina-imagen-faltante-diseno-sitio-web-o-aplicacion-movil-no-hay-foto-disponible_87543-11093.jpg'" />
+      <div class="flex flex-col">
+        <a class="text-sm font-semibold text-foreground hover:text-primary" href="#">
+          {{ product.name }}
+        </a>
+        <span class="text-xs font-medium text-muted-foreground/70">
+          {{ product.description || 'Sin descripción' }}
+        </span>
+      </div>
+    </div>
+  </td>
+
+  <!-- Categoría -->
+  <td>{{ product.category || 'No disponible' }}</td>
+
+  <!-- Precio -->
+  <td>{{ product.price | currency }}</td>
+
+  <!-- Stock -->
+  <td>{{ product.stock }}</td>
+
+  <!-- Estado del producto (Activo/Inactivo) -->
+  <td>
+    <span class="rounded-[30px] px-2 py-0.5 text-xs font-medium"
+      [ngClass]="product.isActive ? 'bg-green-500/10 text-green-800' : 'bg-red-500/10 text-red-800'">
+      {{ product.isActive ? 'Activo' : 'Inactivo' }}
+    </span>
+  </td>
+
+  <td>
+    <button class="flex h-7 w-7 items-center justify-center rounded-md text-blue-500 hover:bg-card hover:text-foreground"  (click)="editProduct(product)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+        <path d="M16 5l3 3" />
+      </svg>
+    </button>
+  </td>
+
+  <!-- Botón de eliminación con modal -->
+  <td>
+    <button class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground" (click)="deleteProduct(product.id)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M4 7l16 0" />
+        <path d="M10 11l0 6" />
+        <path d="M14 11l0 6" />
+        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+      </svg>
+    </button> 
+  </td>
+
+  <!-- Modal de confirmación -->
+  <div *ngIf="isDeleteModalOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4 sm:w-2/3 lg:w-1/3">
+      <h3 class="text-lg font-semibold mb-4 text-center">¿Estás seguro de eliminar este producto?</h3>
+      <div class="flex justify-center gap-4">
+        <button class="px-2 py-2 bg-gray-300 rounded-md" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="px-2 py-2 bg-red-500 text-white rounded-md" (click)="confirmDelete()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Botón de acciones -->
+  <td class="text-center">
+    <button
+      class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-card hover:text-foreground">
+      <span class="flex-none rounded-md bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground hover:bg-primary-dark transition"
+      (click)="viewProduct(product.id)">Ver</span>
+    </button>
+  </td>
+  
+</ng-container>

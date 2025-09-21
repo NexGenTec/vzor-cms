@@ -1,0 +1,23 @@
+<form class="my-10 space-y-6">
+  <div class="text-center">
+    <h2 class="mb-1 text-3xl font-semibold text-foreground">Verificación en Dos Pasos</h2>
+    <p class="text-sm text-muted-foreground">Ingresa el código de verificación que enviamos a</p>
+    <div class="mt-2 text-lg text-muted-foreground">******2289</div>
+  </div>
+
+  <div class="grid grid-cols-6">
+    @for (item of inputs; track $index) {
+    <input
+      placeholder=""
+      maxlength="1"
+      class="h-10 w-10 rounded-md border border-border bg-background text-center text-muted-foreground outline-none focus:border-primary sm:h-14 sm:w-14" />
+    }
+  </div>
+
+  <!-- Botón de envío -->
+  <div>
+    <app-button routerLink="/constructora" full impact="bold" tone="primary" shape="rounded" size="medium">
+      Enviar
+    </app-button>
+  </div>
+</form>

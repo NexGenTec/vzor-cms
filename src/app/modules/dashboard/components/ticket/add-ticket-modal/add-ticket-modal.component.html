@@ -1,0 +1,156 @@
+<div class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm p-4 relative overflow-y-auto max-h-[80vh]">
+      <button 
+        (click)="closeModal()" 
+        class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+        aria-label="Cerrar Modal"
+      >
+        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+  
+      <!-- Formulario de Ticket -->
+      <form [formGroup]="ticketForm" (ngSubmit)="addTicket()">
+        <div class="space-y-4">
+          <!-- Título del Ticket -->
+          <div>
+            <label for="titulo" class="block text-sm font-semibold">Título</label>
+            <input 
+              id="titulo"
+              formControlName="titulo"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              placeholder="Ingrese el título del problema"
+              required
+            />
+            <div *ngIf="ticketForm.get('titulo')?.invalid && ticketForm.get('titulo')?.touched" class="text-red-500 text-xs mt-1">
+              El título es obligatorio.
+            </div>
+          </div>
+  
+          <!-- Descripción del Ticket -->
+          <div>
+            <label for="descripcion" class="block text-sm font-semibold">Descripción</label>
+            <textarea 
+              id="descripcion"
+              formControlName="descripcion"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              placeholder="Describa el problema detalladamente"
+              rows="3"
+            ></textarea>
+            <div *ngIf="ticketForm.get('descripcion')?.invalid && ticketForm.get('descripcion')?.touched" class="text-red-500 text-xs mt-1">
+              La descripción es obligatoria.
+            </div>
+          </div>
+  
+          <!-- Categoría del Ticket -->
+          <div>
+            <label for="categoria" class="block text-sm font-semibold">Categoría</label>
+            <select 
+              id="categoria"
+              formControlName="categoria"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="Soporte Técnico">Soporte Técnico</option>
+              <option value="Consulta General">Consulta General</option>
+              <!-- Añadir más opciones según sea necesario -->
+            </select>
+            <div *ngIf="ticketForm.get('categoria')?.invalid && ticketForm.get('categoria')?.touched" class="text-red-500 text-xs mt-1">
+              La categoría es obligatoria.
+            </div>
+          </div>
+  
+          <!-- Estado del Ticket -->
+          <div>
+            <label for="estado" class="block text-sm font-semibold">Estado</label>
+            <select 
+              id="estado"
+              formControlName="estado"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="Abierto">Abierto</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Cerrado">Cerrado</option>
+            </select>
+            <div *ngIf="ticketForm.get('estado')?.invalid && ticketForm.get('estado')?.touched" class="text-red-500 text-xs mt-1">
+              El estado es obligatorio.
+            </div>
+          </div>
+  
+          <!-- Prioridad del Ticket -->
+          <div>
+            <label for="prioridad" class="block text-sm font-semibold">Prioridad</label>
+            <select 
+              id="prioridad"
+              formControlName="prioridad"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="Baja">Baja</option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+            </select>
+            <div *ngIf="ticketForm.get('prioridad')?.invalid && ticketForm.get('prioridad')?.touched" class="text-red-500 text-xs mt-1">
+              La prioridad es obligatoria.
+            </div>
+          </div>
+  
+          <!-- Fecha de Creación -->
+          <div>
+            <label for="fechaCreacion" class="block text-sm font-semibold">Fecha de Creación</label>
+            <input 
+              id="fechaCreacion"
+              formControlName="fechaCreacion"
+              type="date"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              required
+            />
+            <div *ngIf="ticketForm.get('fechaCreacion')?.invalid && ticketForm.get('fechaCreacion')?.touched" class="text-red-500 text-xs mt-1">
+              La fecha de creación es obligatoria.
+            </div>
+          </div>
+
+
+         <div>
+          <label for="usuarioSolicitante" class="block text-sm font-semibold text-gray-700">
+            Usuario Solicitante
+          </label>
+          <input
+            id="usuarioSolicitante"
+            formControlName="usuarioSolicitante"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-200 text-gray-500 cursor-not-allowed"
+            placeholder="Cargando usuario..."
+            [readonly]="true"
+          />
+          </div>
+
+
+          <!-- Asignado A -->
+          <div>
+            <label for="asignadoA" class="block text-sm font-semibold">Asignado A</label>
+            <select 
+              id="asignadoA"
+              formControlName="asignadoA"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md">
+              <option value="">Seleccione un usuario</option>
+              <option *ngFor="let user of filteredUsers" [value]="user.name">
+                {{ user.name }}
+              </option>
+            </select>
+          </div>
+          <!-- Botón de Enviar -->
+          <div class="flex justify-end">
+            <button 
+              type="submit" 
+              class="flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary-dark transition"
+              [disabled]="ticketForm.invalid"
+            >
+              Agregar Ticket
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+</div>
+  
