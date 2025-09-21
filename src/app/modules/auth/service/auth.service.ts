@@ -143,7 +143,7 @@ export class AuthService {
   async resetPassword(email: string): Promise<void> {
     try {
       const actionCodeSettings = {
-        url: 'https://nexgenwebmaintainer.web.app/auth/new-password',
+        url: 'https://vzor-cms.web.app/auth/new-password',
         handleCodeInApp: true,
       };
       await this.afAuth.sendPasswordResetEmail(email, actionCodeSettings);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
@@ -14,6 +14,7 @@ import { AuthService } from '../../service/auth.service';
   styleUrls: ['./sign-in.component.scss'],
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, RouterLink, AngularSvgIconModule, NgClass, NgIf, ButtonComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SignInComponent implements OnInit {
   form!: FormGroup;

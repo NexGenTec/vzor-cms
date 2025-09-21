@@ -220,7 +220,7 @@ export class SignUpComponent implements OnInit {
   }
   
   openTerms() {
-    window.open('https://nexgentech.cl/politicas-de-privacidad', '_blank');
+    window.open('https://www.vzorsuite.com/', '_blank');
   }
   
 }

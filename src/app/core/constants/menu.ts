@@ -101,10 +101,10 @@ export class Menu {
       items: [
         {
           icon: '../../../assets/icons/heroicons/outline/chart-pie.svg',
-          label: 'Constructora',
-          route: '/layout/constructora',
+          label: 'vzor-cms',
+          route: '/layout/vzor-cms',
           children: [
-            { label: 'General', route: '/layout/constructora' },
+            { label: 'General', route: '/layout/vzor-cms' },
           ],
         },
         {

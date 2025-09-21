@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 })
 export class UserService {
   private collectionName = 'Users';
-  private readonly adminEmail = 'nexgentechnologies2024@gmail.com';
+  private readonly adminEmail = 'vzor-cms';
 
   constructor(
     private firestore: AngularFirestore,

@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @Component({
   selector: 'app-project-footer',
   standalone: true,
-  imports: [AngularSvgIconModule],
+  imports: [AngularSvgIconModule, CommonModule], 
   templateUrl: './project-footer.component.html',
   styleUrl: './project-footer.component.scss'
 })

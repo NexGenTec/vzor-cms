@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     DashboardRoutingModule,
     CommonModule],
   providers: [
-    { provide: FIREBASE_OPTIONS, useValue: environment.nexgen },
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
   ],   
   
 })

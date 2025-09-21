@@ -9,6 +9,6 @@ import { environment } from '../environments/environment.prod';
 export const appConfig: ApplicationConfig = {
   providers:
    [ provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(),
-    { provide: FIREBASE_OPTIONS, useValue: environment.nexgen },
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
    ]
 };

@@ -10,7 +10,7 @@ import { NgModule } from '@angular/core';
       ProfileRoutingModule,
       CommonModule],
     providers: [
-      { provide: FIREBASE_OPTIONS, useValue: environment.nexgen },
+      { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
     ],   
 })
 export class ProfileModule { }

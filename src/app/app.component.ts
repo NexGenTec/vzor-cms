@@ -11,6 +11,6 @@ import { NgxSonnerToaster } from 'ngx-sonner';
   imports: [RouterOutlet, ResponsiveHelperComponent, NgxSonnerToaster,RouterModule],
 })
 export class AppComponent {
-  title = ' Constructora';
+  title = ' vzor-cms';
   constructor(public themeService: ThemeService) {}
 }

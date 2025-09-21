@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment.prod';
     ChatRoutingModule
   ],
   providers: [
-    { provide: FIREBASE_OPTIONS, useValue: environment.nexgen }
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig }
   ],
 })
 export class ChatModule { }

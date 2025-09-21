@@ -20,12 +20,12 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, AppRoutingModule), 
-    provideFirebaseApp(() => initializeApp(environment.nexgen)),
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideFirestore(() => getFirestore()),
     FirebaseAppModule,
     AngularFireModule,
     AngularFirestore,
-    { provide: FIREBASE_OPTIONS, useValue: environment.nexgen },
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
   provideAnimations()],
 }).catch((err) => console.error(err));
 
