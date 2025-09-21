@@ -2,21 +2,24 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+  
 export const environment = {
   production: false,
-  nexgen: {
-    apiKey: "AIzaSyBUclhgw0asBudveCrwMvvdGiaTRe5Xlb4",
-    authDomain: "nexgenwebmaintainer.firebaseapp.com",
-    projectId: "nexgenwebmaintainer",
-    storageBucket: "nexgenwebmaintainer.firebasestorage.app",
-    messagingSenderId: "155866168020",
-    appId: "1:155866168020:web:3c7f6852ad5083fed61941",
-    measurementId: "G-4B5V1ZB8F3",
-    nombre: "NexGen Maintainer",
-    colorPrincipal: "#009688",
-    logo: "assets/logos/nexgen.png"
-  }
+  firebaseConfig: {
+    apiKey: "AIzaSyA1CtsOCVQJjDWnKijEnuz1x1bzLtdaxqk",
+    authDomain: "web-vzor-cms.firebaseapp.com",
+    projectId: "web-vzor-cms",
+    storageBucket: "web-vzor-cms.firebasestorage.app",
+    messagingSenderId: "71836872068",
+    appId: "1:71836872068:web:7a024ad489272b78abc1d1",
+    measurementId: "G-XXXXXXXXXX"
+  },
+  // Opcional: otras propiedades específicas
+  nombre: "VZOR CMS",
+  colorPrincipal: "#FF5722",
+  logo: "assets/logos/vzor.png"
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
