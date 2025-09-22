@@ -101,31 +101,14 @@ export class Menu {
       items: [
         {
           icon: '../../../assets/icons/heroicons/outline/chart-pie.svg',
-          label: 'vzor-cms',
+          label: 'Vzor CMS',
           route: '/layout/vzor-cms',
           children: [
-            { label: 'General', route: '/layout/vzor-cms' },
+            { label: 'Dashboard', route: '/layout/vzor-cms/dashboard' },
+            { label: 'Blog', route: '/layout/vzor-cms/blog' },
+            { label: 'Recursos', route: '/layout/vzor-cms/recursos' },
+            { label: 'Review', route: '/layout/vzor-cms/review-clientes' },
           ],
-        },
-        {
-          icon: '../../../assets/icons/heroicons/outline/list-details.svg',
-          label: 'Proyectos',
-          route: '/layout/constructora/projects',
-        },
-        {
-          icon: '../../../assets/icons/heroicons/outline/list-details.svg',
-          label: 'Equipos',
-          route: '/layout/constructora/teams',
-        },
-        {
-          icon: '../../../assets/icons/heroicons/outline/list-details.svg',
-          label: 'Productos',
-          route: '/layout/constructora/products',
-        },
-        {
-          icon: '../../../assets/icons/heroicons/outline/list-check.svg',
-          label: 'Tareas',
-          route: '/layout/constructora/tasks',
         },
         // {
         //   icon: '../../../assets/icons/heroicons/outline/ticket.svg',

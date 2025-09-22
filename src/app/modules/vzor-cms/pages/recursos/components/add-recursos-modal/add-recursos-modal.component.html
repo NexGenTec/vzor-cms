@@ -1,0 +1,115 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button 
+      (click)="closeModal()" 
+      class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+      aria-label="Cerrar Modal"
+    >
+      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Formulario de Recurso -->
+    <form [formGroup]="recursoForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <!-- Título del Recurso -->
+        <div>
+          <label for="title" class="block text-sm font-semibold">Título del Recurso</label>
+          <input 
+            id="title"
+            formControlName="title"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el título"
+            aria-labelledby="title"
+          />
+          <div *ngIf="recursoForm.get('title')?.invalid && recursoForm.get('title')?.touched" class="text-red-500 text-sm">
+            El título es obligatorio.
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div>
+          <label for="description" class="block text-sm font-semibold">Descripción</label>
+          <textarea 
+            id="description"
+            formControlName="description"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese una descripción"
+            rows="3"
+          ></textarea>
+          <div *ngIf="recursoForm.get('description')?.invalid && recursoForm.get('description')?.touched" class="text-red-500 text-sm">
+            La descripción es obligatoria.
+          </div>
+        </div>
+
+        <!-- Tipo -->
+        <div>
+          <label for="type" class="block text-sm font-semibold">Tipo</label>
+          <select 
+            id="type"
+            formControlName="type"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Seleccione un tipo</option>
+            <option value="PDF">PDF</option>
+            <option value="Excel">Excel</option>
+            <option value="Video">Video</option>
+            <option value="Software">Software</option>
+            <option value="Imagen">Imagen</option>
+          </select>
+          <div *ngIf="recursoForm.get('type')?.invalid && recursoForm.get('type')?.touched" class="text-red-500 text-sm">
+            El tipo es obligatorio.
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div>
+          <label for="category" class="block text-sm font-semibold">Categoría</label>
+          <select 
+            id="category"
+            formControlName="category"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Seleccione una categoría</option>
+            <option value="Documentación">Documentación</option>
+            <option value="Plantillas">Plantillas</option>
+            <option value="Tutoriales">Tutoriales</option>
+            <option value="Herramientas">Herramientas</option>
+          </select>
+          <div *ngIf="recursoForm.get('category')?.invalid && recursoForm.get('category')?.touched" class="text-red-500 text-sm">
+            La categoría es obligatoria.
+          </div>
+        </div>
+
+        <!-- Descargas -->
+        <div>
+          <label for="downloads" class="block text-sm font-semibold">Descargas</label>
+          <input 
+            id="downloads"
+            formControlName="downloads"
+            type="number"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="0"
+            min="0"
+          />
+          <div *ngIf="recursoForm.get('downloads')?.invalid && recursoForm.get('downloads')?.touched" class="text-red-500 text-sm">
+            Las descargas deben ser un número válido.
+          </div>
+        </div>
+
+        <!-- Botón de Agregar -->
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="flex-none rounded-md px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition"
+            [style.background-color]="'#6EC1E4'"
+            [disabled]="recursoForm.invalid">
+            {{ isEditMode ? 'Actualizar' : 'Agregar' }}
+          </button>        
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

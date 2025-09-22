@@ -1,0 +1,110 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button 
+      (click)="closeModal()" 
+      class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+      aria-label="Cerrar Modal"
+    >
+      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Formulario de Blog Post -->
+    <form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <!-- Título del Post -->
+        <div>
+          <label for="title" class="block text-sm font-semibold">Título del Post</label>
+          <input 
+            id="title"
+            formControlName="title"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el título"
+            aria-labelledby="title"
+          />
+          <div *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched" class="text-red-500 text-sm">
+            El título es obligatorio.
+          </div>
+        </div>
+
+        <!-- Extracto -->
+        <div>
+          <label for="excerpt" class="block text-sm font-semibold">Extracto</label>
+          <textarea 
+            id="excerpt"
+            formControlName="excerpt"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese un extracto"
+            rows="3"
+          ></textarea>
+          <div *ngIf="blogForm.get('excerpt')?.invalid && blogForm.get('excerpt')?.touched" class="text-red-500 text-sm">
+            El extracto es obligatorio.
+          </div>
+        </div>
+
+        <!-- Autor -->
+        <div>
+          <label for="author" class="block text-sm font-semibold">Autor</label>
+          <input 
+            id="author"
+            formControlName="author"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el autor"
+          />
+          <div *ngIf="blogForm.get('author')?.invalid && blogForm.get('author')?.touched" class="text-red-500 text-sm">
+            El autor es obligatorio.
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div>
+          <label for="category" class="block text-sm font-semibold">Categoría</label>
+          <select 
+            id="category"
+            formControlName="category"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Seleccione una categoría</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Negocios">Negocios</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Desarrollo">Desarrollo</option>
+          </select>
+          <div *ngIf="blogForm.get('category')?.invalid && blogForm.get('category')?.touched" class="text-red-500 text-sm">
+            La categoría es obligatoria.
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div>
+          <label for="status" class="block text-sm font-semibold">Estado</label>
+          <select 
+            id="status"
+            formControlName="status"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="draft">Borrador</option>
+            <option value="published">Publicado</option>
+          </select>
+          <div *ngIf="blogForm.get('status')?.invalid && blogForm.get('status')?.touched" class="text-red-500 text-sm">
+            El estado es obligatorio.
+          </div>
+        </div>
+
+        <!-- Botón de Agregar -->
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="flex-none rounded-md px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition"
+            [style.background-color]="'#6EC1E4'"
+            [disabled]="blogForm.invalid">
+            {{ isEditMode ? 'Actualizar' : 'Agregar' }}
+          </button>        
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

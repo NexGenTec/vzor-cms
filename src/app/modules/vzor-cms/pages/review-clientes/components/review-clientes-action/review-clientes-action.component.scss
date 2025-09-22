@@ -1,0 +1,60 @@
+.review-clientes-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.action-info {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.total-reviews {
+  font-weight: 500;
+}
+
+.action-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-size-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.page-size-select {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  background: white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-clientes-action {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .action-controls {
+    justify-content: center;
+  }
+}

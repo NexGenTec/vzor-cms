@@ -1,0 +1,106 @@
+<ng-container>
+  <!-- Checkbox para selección de recursos -->
+  <td class="text-center">
+    <input
+      [(ngModel)]="recurso.selected"
+      class="checkbox checkbox-sm"
+      data-datatable-row-check="true"
+      type="checkbox"
+      [value]="recurso.id" />
+  </td>
+  
+  <!-- Información del recurso (Título) -->
+  <td>
+    <div class="flex items-center gap-2.5">
+      <div class="flex flex-col">
+        <a class="text-sm font-semibold text-foreground hover:text-primary" href="#">
+          {{ recurso.title }}
+        </a>
+      </div>
+    </div>
+  </td>
+
+  <!-- Descripción del recurso -->
+  <td>
+    <span class="text-xs font-medium text-muted-foreground/70">
+      {{ recurso.description || 'Sin descripción' }}
+    </span>
+  </td>
+  
+  <!-- Tipo del recurso -->
+  <td>
+    <span class="rounded-[30px] px-2 py-0.5 text-xs font-medium"
+      [ngClass]="{
+        'bg-red-500/10 text-red-800': recurso.type === 'PDF',
+        'bg-green-500/10 text-green-800': recurso.type === 'Excel',
+        'bg-blue-500/10 text-blue-800': recurso.type === 'Video',
+        'bg-purple-500/10 text-purple-800': recurso.type === 'Software',
+        'bg-yellow-500/10 text-yellow-800': recurso.type === 'Imagen'
+      }">
+      {{ recurso.type || 'Sin tipo' }}
+    </span>
+  </td>
+
+  <!-- Categoría del recurso -->
+  <td>
+    <span class="rounded-[30px] px-2 py-0.5 text-xs font-medium"
+      [ngClass]="{
+        'bg-blue-500/10 text-blue-800': recurso.category === 'Documentación',
+        'bg-green-500/10 text-green-800': recurso.category === 'Plantillas',
+        'bg-yellow-500/10 text-yellow-800': recurso.category === 'Tutoriales',
+        'bg-purple-500/10 text-purple-800': recurso.category === 'Herramientas'
+      }">
+      {{ recurso.category || 'Sin categoría' }}
+    </span>
+  </td>
+  
+  <!-- Número de descargas -->
+  <td>
+    <span class="text-xs font-medium text-muted-foreground/70">
+      {{ recurso.downloads || 0 }} descargas
+    </span>
+  </td>
+  
+  <!-- Fecha de creación -->
+  <td>
+    <span class="text-xs font-medium text-muted-foreground/70">
+      {{ recurso.createdAt ? (recurso.createdAt | date: 'dd/MM/yyyy') : 'Sin fecha' }}
+    </span>
+  </td>
+
+  <!-- Botón de editar -->
+  <td>
+    <button class="flex h-7 w-7 items-center justify-center rounded-md text-blue-500 hover:bg-card hover:text-foreground" (click)="onEdit()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+        <path d="M16 5l3 3" />
+      </svg>
+    </button>
+  </td>
+
+  <!-- Botón de eliminar -->
+  <td>
+    <button class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground" (click)="onDelete()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M4 7l16 0" />
+        <path d="M10 11l0 6" />
+        <path d="M14 11l0 6" />
+        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+      </svg>
+    </button>
+  </td>
+
+  <!-- Botón de acciones -->
+  <td class="text-center">
+    <button
+      class="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-card hover:text-foreground">
+      <span class="flex-none rounded-md px-4 py-1 text-xs font-semibold text-white hover:opacity-90 transition" 
+            [style.background-color]="'#6EC1E4'" 
+            (click)="onDownload()">Descargar</span>
+    </button>
+  </td>
+</ng-container>

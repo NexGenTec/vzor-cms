@@ -12,11 +12,10 @@ export const environment = {
     storageBucket: "web-vzor-cms.firebasestorage.app",
     messagingSenderId: "71836872068",
     appId: "1:71836872068:web:7a024ad489272b78abc1d1",
-    measurementId: "G-XXXXXXXXXX"
+    measurementId: "G-YCK6W5BRK9"
   },
   // Opcional: otras propiedades específicas
-  nombre: "VZOR CMS",
-  colorPrincipal: "#FF5722",
+  nombre: "VZOR CMS", 
   logo: "assets/logos/vzor.png"
 };
 

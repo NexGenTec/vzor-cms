@@ -5,12 +5,6 @@ import { AuthGuard } from '../auth/guard/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'constructora',
-    component: LayoutComponent,
-    loadChildren: () => import('../constructora/constructora.module').then((m) => m.ConstructoradModule),
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'components',
     component: LayoutComponent,
     loadChildren: () => import('../uikit/uikit.module').then((m) => m.UikitModule),
@@ -34,7 +28,13 @@ const routes: Routes = [
     loadChildren: () => import('../profile/profile.module').then((m) => m.ProfileModule),
     canActivate: [AuthGuard],
   },
-  { path: '', redirectTo: 'constructora', pathMatch: 'full' },
+  {
+    path: 'vzor-cms',
+    component: LayoutComponent,
+    loadChildren: () => import('../vzor-cms/vzor-cms.module').then((m) => m.VzorCmsModule),
+    canActivate: [AuthGuard],
+  },
+  { path: '', redirectTo: 'vzor-cms', pathMatch: 'full' },  
   { path: '**', redirectTo: 'error/404' },
 ];
 
