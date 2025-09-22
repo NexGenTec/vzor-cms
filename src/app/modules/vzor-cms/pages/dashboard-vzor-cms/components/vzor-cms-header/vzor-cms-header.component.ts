@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vzor-cms-header',
@@ -15,4 +16,10 @@ export class VzorCmsHeaderComponent {
     month: 'long',
     day: 'numeric'
   });
+
+  constructor(private router: Router) {}
+
+  navigateToRecursos(): void {
+    this.router.navigate(['/vzor-cms/recursos']);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
@@ -9,7 +9,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   templateUrl: './vzor-cms-chart-card.component.html',
   styleUrl: './vzor-cms-chart-card.component.scss'
 })
-export class VzorCmsChartCardComponent implements OnInit {
+export class VzorCmsChartCardComponent implements OnInit, OnChanges {
   @Input() totalPosts: number = 0;
   @Input() totalRecursos: number = 0;
   @Input() totalReviews: number = 0;
@@ -27,6 +27,12 @@ export class VzorCmsChartCardComponent implements OnInit {
     this.loadStats();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['totalPosts'] || changes['totalRecursos'] || changes['totalReviews']) {
+      this.loadStats();
+    }
+  }
+
   loadStats(): void {
     this.isLoading = true;
     
@@ -40,7 +46,7 @@ export class VzorCmsChartCardComponent implements OnInit {
         completionRate: this.calculateCompletionRate()
       };
       this.isLoading = false;
-    }, 1000);
+    }, 500);
   }
 
   private calculateCompletionRate(): number {

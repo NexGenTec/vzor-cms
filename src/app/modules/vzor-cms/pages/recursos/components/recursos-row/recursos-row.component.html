@@ -64,7 +64,7 @@
   <!-- Fecha de creación -->
   <td>
     <span class="text-xs font-medium text-muted-foreground/70">
-      {{ recurso.createdAt ? (recurso.createdAt | date: 'dd/MM/yyyy') : 'Sin fecha' }}
+      {{ recurso.createdAt ? formatDate(recurso.createdAt) : 'Sin fecha' }}
     </span>
   </td>
 

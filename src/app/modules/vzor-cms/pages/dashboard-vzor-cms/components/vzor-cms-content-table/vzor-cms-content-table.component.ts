@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -22,7 +22,7 @@ interface ContentItem {
   templateUrl: './vzor-cms-content-table.component.html',
   styleUrl: './vzor-cms-content-table.component.scss'
 })
-export class VzorCmsContentTableComponent implements OnInit {
+export class VzorCmsContentTableComponent implements OnInit, OnChanges {
   @Input() blogPosts: BlogPost[] = [];
   @Input() recursos: Recurso[] = [];
   @Input() reviews: ReviewCliente[] = [];
@@ -32,6 +32,12 @@ export class VzorCmsContentTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContentItems();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['blogPosts'] || changes['recursos'] || changes['reviews']) {
+      this.loadContentItems();
+    }
   }
 
   loadContentItems(): void {

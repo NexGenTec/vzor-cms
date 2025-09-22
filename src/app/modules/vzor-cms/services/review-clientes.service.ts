@@ -16,9 +16,14 @@ export class ReviewClientesService {
   getReviews(): Observable<ReviewCliente[]> {
     return this.firestore.collection<ReviewCliente>(this.collection).snapshotChanges().pipe(
       map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as ReviewCliente;
+        const data = a.payload.doc.data() as any;
         const docId = a.payload.doc.id;
-        return { ...data, id: +docId } as ReviewCliente;
+        return { 
+          ...data, 
+          id: +docId,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+        } as ReviewCliente;
       }))
     );
   }

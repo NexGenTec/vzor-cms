@@ -121,11 +121,21 @@
       </ng-container>
 
       <!-- Chart Card -->
-      <app-vzor-cms-chart-card class="md:col-span-2 xl:col-span-1"></app-vzor-cms-chart-card>
+      <app-vzor-cms-chart-card 
+        class="md:col-span-2 xl:col-span-1"
+        [totalPosts]="totalBlogPosts()"
+        [totalRecursos]="totalRecursos()"
+        [totalReviews]="totalReviews()">
+      </app-vzor-cms-chart-card>
       <!-- end Chart Card -->
 
       <!-- Content Table -->
-      <app-vzor-cms-content-table class="md:col-span-2 xl:col-span-3"></app-vzor-cms-content-table>
+      <app-vzor-cms-content-table 
+        class="md:col-span-2 xl:col-span-3"
+        [blogPosts]="getRecentPosts()"
+        [recursos]="getRecentRecursos()"
+        [reviews]="getRecentReviews()">
+      </app-vzor-cms-content-table>
       <!-- end Content Table -->
     </div>
   </ng-container>
