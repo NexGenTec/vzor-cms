@@ -43,8 +43,8 @@ export class ProfileMenuComponent implements OnInit {
   public isOpen = false;
   public themeColors = [
     {
-      name: 'red',
-      code:'#cc0022',
+      name: 'Vzor',
+      code:'#6EC1E4',
     },
     // {
     //   name: 'blue',

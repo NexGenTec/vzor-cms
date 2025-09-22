@@ -8,8 +8,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { toast } from 'ngx-sonner';
 import { CommonModule, NgIf } from '@angular/common';
 import { UserService } from '../../../management/service/user.service';
-import { firstValueFrom, from } from 'rxjs';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-sign-up',
@@ -26,10 +24,6 @@ export class SignUpComponent implements OnInit {
   passwordStrength = 0;
   passwordStrengthArray = new Array(4);
   isSubmitting: boolean = false;
-  imagePreview: string | null = null;
-  isUploadingImage = false;
-  selectedFile: File | null = null;
-  imageUrl: string | null = null;
 
   constructor(
     private readonly _formBuilder: FormBuilder,
@@ -37,7 +31,6 @@ export class SignUpComponent implements OnInit {
     private readonly _authService: AuthService,
     private readonly _afAuth: AngularFireAuth,
     private readonly _User: UserService,
-    private storage: AngularFireStorage,
 
   ) {}
 
@@ -49,7 +42,6 @@ export class SignUpComponent implements OnInit {
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required]],
         acceptTerms: [, [Validators.requiredTrue]],
-        image: [null],
       },
       {
         validators: this.matchPasswords('password', 'confirmPassword'),
@@ -100,42 +92,12 @@ export class SignUpComponent implements OnInit {
     this.isSubmitting = true;
   
     try {
-      // Subir imagen a Firebase Storage
-      if (this.selectedFile) {
-        const filePath = `users/${email}/${name}-${Date.now()}`;
-        const fileRef = this.storage.ref(filePath);
-  
-        // Usar 'from' para convertir la promesa en un observable
-        const uploadTask$ = from(this.storage.upload(filePath, this.selectedFile).then(() => fileRef.getDownloadURL().toPromise()));
-  
-        // Suscribirse al observable para obtener la URL
-        uploadTask$.subscribe({
-          next: (url: string) => {
-            this.imageUrl = url; // Asignar la URL obtenida
-          },
-          error: (error) => {
-            console.error('Error al subir la imagen', error);
-            toast.error('Error al subir la imagen', { position: 'top-right' });
-          },
-          complete: () => {
-            // Crear usuario con la información del formulario
-            if (this.imageUrl) {
-              this._authService.signUp(name, trimmedEmail, password, this.imageUrl)
-                .catch((error) => {
-                  // Mostrar el mensaje de error en el toast
-                  toast.error(error.message, { position: 'top-right' });
-                });
-            } else {
-              toast.error('No se pudo obtener la URL de la imagen', { position: 'top-right' });
-            }
-          }
-        });
-      } else {
-        throw new Error('Debe seleccionar una imagen.');
-      }
+      // Crear usuario con la información del formulario
+      await this._authService.signUp(name, trimmedEmail, password, '');
+      toast.success('Usuario registrado exitosamente', { position: 'top-right' });
+      this._router.navigate(['/auth/sign-in']);
     } catch (error: any) {
       console.error('Error al registrar usuario', error);
-      // Mostrar el error en el toast
       toast.error('Error al registrar: ' + error.message, { position: 'top-right' });
     } finally {
       this.isSubmitting = false;
@@ -171,53 +133,6 @@ export class SignUpComponent implements OnInit {
 
   }
 
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  // Manejar el evento 'drop' cuando se suelta una imagen
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.handleFile(files[0]);
-    }
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input?.files?.[0]) {
-      const file = input.files[0];
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error('El archivo excede los 10MB.', { position: 'top-right' });
-        return;
-      }
-      this.selectedFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-        this.form.patchValue({ image: file }); // Marcar el campo como válido
-      };
-      reader.readAsDataURL(file);
-    }
-  }  
-
-  private handleFile(file: File): void {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  removeImage(): void {
-    this.imagePreview = null;
-  }
   
   openTerms() {
     window.open('https://www.vzorsuite.com/', '_blank');
