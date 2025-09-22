@@ -17,6 +17,13 @@
       <option value="Seguridad">Seguridad</option>
       <option value="Noticias">Noticias</option>
     </select>
+    <select 
+      class="rounded-md border border-muted/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+      (change)="onStatusChange($event)">
+      <option value="Todas">Todos los estados</option>
+      <option value="published">Publicado</option>
+      <option value="draft">Borrador</option>
+    </select>
   </div>
   <div class="text-sm text-muted-foreground">
     Mostrando {{ totalPosts }} posts

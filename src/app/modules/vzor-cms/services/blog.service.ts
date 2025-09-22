@@ -33,6 +33,11 @@ export class BlogService {
     return this.firestore.doc<BlogPost>(`${this.collection}/${id}`).valueChanges();
   }
 
+  // GET - Obtener un post por ID (alias)
+  getBlogPostById(id: number): Observable<BlogPost | undefined> {
+    return this.getBlogPost(id);
+  }
+
   // POST - Crear nuevo post
   createBlogPost(postData: CreateBlogPostRequest): Observable<void> {
     const id = Date.now();

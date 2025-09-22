@@ -56,7 +56,8 @@
   <app-recursos-action
     [totalRecursos]="totalRecursos"
     (searchChange)="onSearchChange($event)"
-    (categoryChange)="onCategoryChange($event)">
+    (categoryChange)="onCategoryChange($event)"
+    (typeChange)="onTypeChange($event)">
   </app-recursos-action>
   <div class="scrollbar-thumb-rounded scrollbar-track-rounded grow overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
     <table class="table w-full table-auto border-collapse border-0 text-left align-middle leading-5 text-muted-foreground">
@@ -66,7 +67,7 @@
       <tbody>
         <tr class="hover:bg-card/50" *ngFor="let recurso of pagedRecursos(); let i=index" app-recursos-row [recurso]="recurso" [onEditRecurso]="openEditModal.bind(this)" (editRecurso)="openEditModal($event)" (deleteRecurso)="deleteRecurso($event)" (downloadRecurso)="downloadRecurso($event)"></tr>
         <tr *ngIf="filteredRecursos().length === 0">
-          <td class="py-4 text-center text-sm" colspan="10">No se encontraron recursos</td>
+          <td class="py-4 text-center text-sm" colspan="8">No se encontraron recursos</td>
         </tr>
       </tbody>
     </table>

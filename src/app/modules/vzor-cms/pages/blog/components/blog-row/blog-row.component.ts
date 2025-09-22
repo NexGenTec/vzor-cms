@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { Router } from '@angular/router';
+import { toast } from 'ngx-sonner';
 import { BlogPost } from '../../../../models/blog.model';
 
 @Component({
@@ -16,6 +18,8 @@ export class BlogRowComponent {
   @Input() onEditPost!: (post: BlogPost) => void;
   @Output() editPost = new EventEmitter<BlogPost>();
   @Output() deletePost = new EventEmitter<number>();
+
+  constructor(private router: Router) {}
 
   onEdit(): void {
     this.editPost.emit(this.blogPost);
@@ -36,7 +40,7 @@ export class BlogRowComponent {
   }
 
   viewPost(id: number): void {
-    // Implementar navegación o modal de vista
-    console.log('Ver post:', id);
+    this.router.navigate(['/layout/vzor-cms/blog', id.toString()]);
+    toast.info(`Viendo post: ${this.blogPost.title}`);
   }
 }

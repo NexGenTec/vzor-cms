@@ -12,6 +12,7 @@ export class RecursosActionComponent {
   @Input() totalRecursos = 0;
   @Output() searchChange = new EventEmitter<string>();
   @Output() categoryChange = new EventEmitter<string>();
+  @Output() typeChange = new EventEmitter<string>();
 
   onSearchChange(event: any) {
     this.searchChange.emit(event.target.value);
@@ -19,5 +20,9 @@ export class RecursosActionComponent {
 
   onCategoryChange(event: any) {
     this.categoryChange.emit(event.target.value);
+  }
+
+  onTypeChange(event: any) {
+    this.typeChange.emit(event.target.value);
   }
 }

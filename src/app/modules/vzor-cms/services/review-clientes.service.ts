@@ -33,6 +33,11 @@ export class ReviewClientesService {
     return this.firestore.doc<ReviewCliente>(`${this.collection}/${id}`).valueChanges();
   }
 
+  // GET - Obtener una reseña por ID (alias)
+  getReviewById(id: number): Observable<ReviewCliente | undefined> {
+    return this.getReview(id);
+  }
+
   // POST - Crear nueva reseña
   createReview(reviewData: CreateReviewRequest): Observable<void> {
     const id = Date.now();

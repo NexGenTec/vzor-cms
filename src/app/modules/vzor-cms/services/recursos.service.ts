@@ -33,6 +33,11 @@ export class RecursosService {
     return this.firestore.doc<Recurso>(`${this.collection}/${id}`).valueChanges();
   }
 
+  // GET - Obtener un recurso por ID (alias)
+  getRecursoById(id: number): Observable<Recurso | undefined> {
+    return this.getRecurso(id);
+  }
+
   // POST - Crear nuevo recurso
   createRecurso(recursoData: CreateRecursoRequest): Observable<void> {
     const id = Date.now();

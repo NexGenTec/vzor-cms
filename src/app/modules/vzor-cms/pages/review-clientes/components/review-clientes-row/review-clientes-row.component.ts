@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { Router } from '@angular/router';
+import { toast } from 'ngx-sonner';
 import { ReviewCliente } from '../../../../models/review-clientes.model';
 
 @Component({
@@ -16,6 +18,8 @@ export class ReviewClientesRowComponent {
   @Input() onEditReview!: (review: ReviewCliente) => void;
   @Output() editReview = new EventEmitter<ReviewCliente>();
   @Output() deleteReview = new EventEmitter<number>();
+
+  constructor(private router: Router) {}
 
   onEdit(): void {
     this.editReview.emit(this.review);
@@ -53,7 +57,7 @@ export class ReviewClientesRowComponent {
   }
 
   viewReview(id: number): void {
-    // Implementar navegación o modal de vista
-    console.log('Ver reseña:', id);
+    this.router.navigate(['/layout/vzor-cms/review-clientes', id.toString()]);
+    toast.info(`Viendo reseña: ${this.review.clientName}`);
   }
 }

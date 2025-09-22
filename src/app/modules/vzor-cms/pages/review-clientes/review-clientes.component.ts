@@ -4,6 +4,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { ReviewClientesService } from '../../services/review-clientes.service';
+import { ReviewFilterService } from '../../services/review-filter.service';
 import { ReviewCliente, CreateReviewRequest } from '../../models/review-clientes.model';
 import { ReviewClientesHeaderComponent } from './components/review-clientes-header/review-clientes-header.component';
 import { ReviewClientesRowComponent } from './components/review-clientes-row/review-clientes-row.component';
@@ -48,7 +49,10 @@ export class ReviewClientesComponent implements OnInit {
   projectTypes = ['Todas', 'Residencial', 'Comercial', 'Corporativo', 'Industrial'];
   ratings = ['Todas', '5 estrellas', '4 estrellas', '3 estrellas', '2 estrellas', '1 estrella'];
 
-  constructor(private reviewClientesService: ReviewClientesService) { }
+  constructor(
+    private reviewClientesService: ReviewClientesService,
+    private filterService: ReviewFilterService
+  ) { }
 
   ngOnInit(): void {
     this.loadReviews();
@@ -76,9 +80,9 @@ export class ReviewClientesComponent implements OnInit {
   });
 
   filteredReviews = computed(() => {
-    const search = this.searchTerm.toLowerCase();
-    const projectType = this.selectedProjectType;
-    const rating = this.selectedRating;
+    const search = this.filterService.searchField().toLowerCase();
+    const projectType = this.filterService.projectTypeField();
+    const rating = this.filterService.ratingField();
   
     return this.reviews().filter((review) => {
       const matchesSearch = 
@@ -273,15 +277,15 @@ export class ReviewClientesComponent implements OnInit {
   }
 
   onSearchChange(searchTerm: string): void {
-    this.searchTerm = searchTerm;
+    this.filterService.searchField.set(searchTerm);
   }
 
   onProjectTypeChange(projectType: string): void {
-    this.selectedProjectType = projectType;
+    this.filterService.projectTypeField.set(projectType);
   }
 
   onRatingChange(rating: string): void {
-    this.selectedRating = rating;
+    this.filterService.ratingField.set(rating);
   }
 
   private handleRequestError(error: any): void {

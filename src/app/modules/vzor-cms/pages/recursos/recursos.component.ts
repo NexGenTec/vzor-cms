@@ -4,6 +4,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { RecursosService } from '../../services/recursos.service';
+import { RecursosFilterService } from '../../services/recursos-filter.service';
 import { Recurso, CreateRecursoRequest } from '../../models/recursos.model';
 import { RecursosHeaderComponent } from './components/recursos-header/recursos-header.component';
 import { RecursosRowComponent } from './components/recursos-row/recursos-row.component';
@@ -47,7 +48,10 @@ export class RecursosComponent implements OnInit {
   categories = ['Todas', 'Documentación', 'Plantillas', 'Seguridad', 'Tutoriales', 'Catálogos'];
   types = ['PDF', 'Excel', 'Video', 'Software', 'Imagen'];
 
-  constructor(private recursosService: RecursosService) { }
+  constructor(
+    private recursosService: RecursosService,
+    private filterService: RecursosFilterService
+  ) { }
 
   ngOnInit(): void {
     this.loadRecursos();
@@ -75,8 +79,9 @@ export class RecursosComponent implements OnInit {
   });
 
   filteredRecursos = computed(() => {
-    const search = this.searchTerm.toLowerCase();
-    const category = this.selectedCategory;
+    const search = this.filterService.searchField().toLowerCase();
+    const category = this.filterService.categoryField();
+    const type = this.filterService.typeField();
   
     return this.recursos().filter((recurso) => {
       const matchesSearch = 
@@ -85,8 +90,9 @@ export class RecursosComponent implements OnInit {
         recurso.type.toLowerCase().includes(search);
       
       const matchesCategory = category === 'Todas' || recurso.category === category;
+      const matchesType = type === 'Todas' || recurso.type === type;
       
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesType;
     });
   });
 
@@ -159,6 +165,7 @@ export class RecursosComponent implements OnInit {
       error: (error) => this.handleRequestError(error)
     });
   }
+
 
   toggleRecursoSelection(recurso: Recurso): void {
     const selected = this.selectedRecursos();
@@ -262,11 +269,15 @@ export class RecursosComponent implements OnInit {
   }
 
   onSearchChange(searchTerm: string): void {
-    this.searchTerm = searchTerm;
+    this.filterService.searchField.set(searchTerm);
   }
 
   onCategoryChange(category: string): void {
-    this.selectedCategory = category;
+    this.filterService.categoryField.set(category);
+  }
+
+  onTypeChange(type: string): void {
+    this.filterService.typeField.set(type);
   }
 
   private handleRequestError(error: any): void {

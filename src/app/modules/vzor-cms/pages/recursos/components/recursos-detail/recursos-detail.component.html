@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg relative">
+  <div class="text-left mb-4">
+    <button (click)="goBack()" class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M5 12l14 0" />
+        <path d="M5 12l6 6" />
+        <path d="M5 12l6 -6" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Información principal -->
+    <div class="space-y-6">
+      <div class="text-center">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: #003C71;">
+          <img src="assets/avatars/avt-02.jpg" alt="Recurso" class="w-12 h-12 rounded-lg" />
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900">{{ recurso?.title }}</h1>
+        <div class="mt-2">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                [ngClass]="{
+                  'bg-red-100 text-red-800': recurso?.type === 'PDF',
+                  'bg-green-100 text-green-800': recurso?.type === 'Excel',
+                  'bg-blue-100 text-blue-800': recurso?.type === 'Video',
+                  'bg-purple-100 text-purple-800': recurso?.type === 'Software',
+                  'bg-yellow-100 text-yellow-800': recurso?.type === 'Imagen'
+                }">
+            {{ recurso?.type || 'Sin tipo' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Descripción</h3>
+        <p class="text-gray-700">{{ recurso?.description || 'Sin descripción disponible' }}</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-blue-50 rounded-lg p-4">
+          <h4 class="text-sm font-medium text-blue-900 mb-1">Categoría</h4>
+          <span class="text-blue-800 font-semibold">{{ recurso?.category || 'Sin categoría' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

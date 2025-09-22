@@ -12,6 +12,7 @@ export class BlogActionComponent {
   @Input() totalPosts = 0;
   @Output() searchChange = new EventEmitter<string>();
   @Output() categoryChange = new EventEmitter<string>();
+  @Output() statusChange = new EventEmitter<string>();
 
   onSearchChange(event: any) {
     this.searchChange.emit(event.target.value);
@@ -19,5 +20,9 @@ export class BlogActionComponent {
 
   onCategoryChange(event: any) {
     this.categoryChange.emit(event.target.value);
+  }
+
+  onStatusChange(event: any) {
+    this.statusChange.emit(event.target.value);
   }
 }

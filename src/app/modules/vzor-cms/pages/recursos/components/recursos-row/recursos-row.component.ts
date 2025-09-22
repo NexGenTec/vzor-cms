@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { Router } from '@angular/router';
+import { toast } from 'ngx-sonner';
 import { Recurso } from '../../../../models/recursos.model';
 
 @Component({
@@ -17,6 +19,14 @@ export class RecursosRowComponent {
   @Output() editRecurso = new EventEmitter<Recurso>();
   @Output() deleteRecurso = new EventEmitter<number>();
   @Output() downloadRecurso = new EventEmitter<number>();
+  @Output() viewRecurso = new EventEmitter<Recurso>();
+
+  constructor(private router: Router) {}
+
+  onView(): void {
+    this.router.navigate(['/layout/vzor-cms/recursos', this.recurso.id.toString()]);
+    toast.info(`Viendo recurso: ${this.recurso.title}`);
+  }
 
   onEdit(): void {
     this.editRecurso.emit(this.recurso);

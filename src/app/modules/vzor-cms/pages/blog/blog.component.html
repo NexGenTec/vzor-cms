@@ -56,7 +56,8 @@
   <app-blog-action
     [totalPosts]="totalPosts"
     (searchChange)="onSearchChange($event)"
-    (categoryChange)="onCategoryChange($event)">
+    (categoryChange)="onCategoryChange($event)"
+    (statusChange)="onStatusChange($event)">
   </app-blog-action>
   <div class="scrollbar-thumb-rounded scrollbar-track-rounded grow overflow-x-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted">
     <table class="table w-full table-auto border-collapse border-0 text-left align-middle leading-5 text-muted-foreground">

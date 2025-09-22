@@ -6,6 +6,9 @@ import { DashboardVzorCmsComponent } from './pages/dashboard-vzor-cms/dashboard-
 import { BlogComponent } from './pages/blog/blog.component';
 import { RecursosComponent } from './pages/recursos/recursos.component';
 import { ReviewClientesComponent } from './pages/review-clientes/review-clientes.component';
+import { RecursosDetailComponent } from './pages/recursos/components/recursos-detail/recursos-detail.component';
+import { ReviewDetailComponent } from './pages/review-clientes/components/review-detail/review-detail.component';
+import { BlogDetailComponent } from './pages/blog/components/blog-detail/blog-detail.component';
 
 const routes: Routes = [
   {
@@ -16,8 +19,11 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardVzorCmsComponent },
       { path: 'blog', component: BlogComponent },
+      { path: 'blog/:id', component: BlogDetailComponent },
       { path: 'recursos', component: RecursosComponent },
+      { path: 'recursos/:id', component: RecursosDetailComponent },
       { path: 'review-clientes', component: ReviewClientesComponent },
+      { path: 'review-clientes/:id', component: ReviewDetailComponent },
       { path: '**', redirectTo: 'errors/404' },
     ],
   },

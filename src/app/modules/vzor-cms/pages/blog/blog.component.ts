@@ -4,6 +4,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { BlogService } from '../../services/blog.service';
+import { BlogFilterService } from '../../services/blog-filter.service';
 import { BlogPost, CreateBlogPostRequest } from '../../models/blog.model';
 import { BlogHeaderComponent } from './components/blog-header/blog-header.component';
 import { BlogRowComponent } from './components/blog-row/blog-row.component';
@@ -46,7 +47,10 @@ export class BlogComponent implements OnInit {
 
   categories = ['Todas', 'Sostenibilidad', 'Gestión', 'Tecnología', 'Seguridad', 'Noticias'];
 
-  constructor(private blogService: BlogService) { }
+  constructor(
+    private blogService: BlogService,
+    private filterService: BlogFilterService
+  ) { }
 
   ngOnInit(): void {
     this.loadBlogPosts();
@@ -74,8 +78,9 @@ export class BlogComponent implements OnInit {
   });
 
   filteredBlogPosts = computed(() => {
-    const search = this.searchTerm.toLowerCase();
-    const category = this.selectedCategory;
+    const search = this.filterService.searchField().toLowerCase();
+    const category = this.filterService.categoryField();
+    const status = this.filterService.statusField();
   
     return this.blogPosts().filter((post) => {
       const matchesSearch = 
@@ -84,8 +89,9 @@ export class BlogComponent implements OnInit {
         post.author.toLowerCase().includes(search);
       
       const matchesCategory = category === 'Todas' || post.category === category;
+      const matchesStatus = status === 'Todas' || post.status === status;
       
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesCategory && matchesStatus;
     });
   });
 
@@ -249,11 +255,15 @@ export class BlogComponent implements OnInit {
   }
 
   onSearchChange(searchTerm: string): void {
-    this.searchTerm = searchTerm;
+    this.filterService.searchField.set(searchTerm);
   }
 
   onCategoryChange(category: string): void {
-    this.selectedCategory = category;
+    this.filterService.categoryField.set(category);
+  }
+
+  onStatusChange(status: string): void {
+    this.filterService.statusField.set(status);
   }
 
   private handleRequestError(error: any): void {
