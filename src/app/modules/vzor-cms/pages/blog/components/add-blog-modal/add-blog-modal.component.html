@@ -1,5 +1,5 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 relative max-h-[90vh] overflow-y-auto">
     <button 
       (click)="closeModal()" 
       class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
@@ -12,20 +12,72 @@
 
     <!-- Formulario de Blog Post -->
     <form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
-      <div class="space-y-4">
-        <!-- Título del Post -->
-        <div>
-          <label for="title" class="block text-sm font-semibold">Título del Post</label>
-          <input 
-            id="title"
-            formControlName="title"
-            type="text"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md"
-            placeholder="Ingrese el título"
-            aria-labelledby="title"
-          />
-          <div *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched" class="text-red-500 text-sm">
-            El título es obligatorio.
+      <div class="space-y-6">
+        <!-- Información básica -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Título del Post -->
+          <div>
+            <label for="title" class="block text-sm font-semibold">Título del Post</label>
+            <input 
+              id="title"
+              formControlName="title"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              placeholder="Ingrese el título"
+            />
+            <div *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched" class="text-red-500 text-sm">
+              El título es obligatorio.
+            </div>
+          </div>
+
+          <!-- Autor -->
+          <div>
+            <label for="author" class="block text-sm font-semibold">Autor</label>
+            <input 
+              id="author"
+              formControlName="author"
+              type="text"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              placeholder="Ingrese el autor"
+            />
+            <div *ngIf="blogForm.get('author')?.invalid && blogForm.get('author')?.touched" class="text-red-500 text-sm">
+              El autor es obligatorio.
+            </div>
+          </div>
+
+          <!-- Categoría -->
+          <div>
+            <label for="category" class="block text-sm font-semibold">Categoría</label>
+            <select 
+              id="category"
+              formControlName="category"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Seleccione una categoría</option>
+              <option value="Tecnología">Tecnología</option>
+              <option value="Negocios">Negocios</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Desarrollo">Desarrollo</option>
+            </select>
+            <div *ngIf="blogForm.get('category')?.invalid && blogForm.get('category')?.touched" class="text-red-500 text-sm">
+              La categoría es obligatoria.
+            </div>
+          </div>
+
+          <!-- Estado -->
+          <div>
+            <label for="status" class="block text-sm font-semibold">Estado</label>
+            <select 
+              id="status"
+              formControlName="status"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="draft">Borrador</option>
+              <option value="published">Publicado</option>
+            </select>
+            <div *ngIf="blogForm.get('status')?.invalid && blogForm.get('status')?.touched" class="text-red-500 text-sm">
+              El estado es obligatorio.
+            </div>
           </div>
         </div>
 
@@ -44,61 +96,150 @@
           </div>
         </div>
 
-        <!-- Autor -->
-        <div>
-          <label for="author" class="block text-sm font-semibold">Autor</label>
-          <input 
-            id="author"
-            formControlName="author"
-            type="text"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md"
-            placeholder="Ingrese el autor"
-          />
-          <div *ngIf="blogForm.get('author')?.invalid && blogForm.get('author')?.touched" class="text-red-500 text-sm">
-            El autor es obligatorio.
+        <!-- Secciones -->
+        <div formArrayName="sections">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Secciones del Post</h3>
+            <button 
+              type="button"
+              (click)="addSection()"
+              class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600"
+            >
+              + Agregar Sección
+            </button>
+          </div>
+
+          <div *ngFor="let section of sections.controls; let i = index" [formGroupName]="i" class="border border-gray-200 rounded-lg p-4 mb-4">
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="font-medium">Sección {{ i + 1 }} ({{ getSectionPrefix(i) === 'f' ? 'Primera' : 'Segunda' }})</h4>
+              <button 
+                *ngIf="sections.length > 1"
+                type="button"
+                (click)="removeSection(i)"
+                class="px-2 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+              >
+                Eliminar
+              </button>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Título de la sección -->
+              <div>
+                <label class="block text-sm font-semibold">{{ getSectionPrefix(i) === 'f' ? 'Título' : 'Subtítulo' }}</label>
+                <input 
+                  formControlName="f_title"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  [placeholder]="getSectionPrefix(i) === 'f' ? 'Título de la sección' : 'Subtítulo de la sección'"
+                />
+                <div *ngIf="section.get('f_title')?.invalid && section.get('f_title')?.touched" class="text-red-500 text-sm">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+
+              <!-- Subtítulo de la sección -->
+              <div>
+                <label class="block text-sm font-semibold">{{ getSectionPrefix(i) === 'f' ? 'Subtítulo' : 'Descripción' }}</label>
+                <input 
+                  formControlName="f_subtitle"
+                  type="text"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  [placeholder]="getSectionPrefix(i) === 'f' ? 'Subtítulo de la sección' : 'Descripción de la sección'"
+                />
+                <div *ngIf="section.get('f_subtitle')?.invalid && section.get('f_subtitle')?.touched" class="text-red-500 text-sm">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+
+              <!-- Párrafo de la sección -->
+              <div>
+                <label class="block text-sm font-semibold">Párrafo</label>
+                <textarea 
+                  formControlName="f_paragraph"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="Contenido del párrafo"
+                  rows="4"
+                ></textarea>
+                <div *ngIf="section.get('f_paragraph')?.invalid && section.get('f_paragraph')?.touched" class="text-red-500 text-sm">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+
+              <!-- Imágenes -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block text-sm font-semibold">Imágenes</label>
+                  <button 
+                    type="button"
+                    (click)="addImageToSection(i)"
+                    class="px-2 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
+                  >
+                    + Agregar Imagen
+                  </button>
+                </div>
+                <div *ngFor="let img of section.get('f_img')?.value; let j = index" class="flex items-center gap-2 mb-2">
+                  <input 
+                    type="text"
+                    [value]="img"
+                    (input)="updateImageValue(i, j, $event)"
+                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="URL de la imagen"
+                  />
+                  <button 
+                    type="button"
+                    (click)="removeImageFromSection(i, j)"
+                    class="px-2 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+                  >
+                    -
+                  </button>
+                </div>
+              </div>
+
+              <!-- Enlaces de medios -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="block text-sm font-semibold">Enlaces de Medios</label>
+                  <button 
+                    type="button"
+                    (click)="addMediaLinkToSection(i)"
+                    class="px-2 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600"
+                  >
+                    + Agregar Enlace
+                  </button>
+                </div>
+                <div *ngFor="let link of section.get('f_media_links')?.value; let k = index" class="flex items-center gap-2 mb-2">
+                  <input 
+                    type="text"
+                    [value]="link"
+                    (input)="updateMediaLinkValue(i, k, $event)"
+                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="URL del enlace de medio"
+                  />
+                  <button 
+                    type="button"
+                    (click)="removeMediaLinkFromSection(i, k)"
+                    class="px-2 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+                  >
+                    -
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Categoría -->
-        <div>
-          <label for="category" class="block text-sm font-semibold">Categoría</label>
-          <select 
-            id="category"
-            formControlName="category"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+        <!-- Botones -->
+        <div class="flex justify-end gap-3">
+          <button 
+            type="button"
+            (click)="closeModal()"
+            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           >
-            <option value="">Seleccione una categoría</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Negocios">Negocios</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Desarrollo">Desarrollo</option>
-          </select>
-          <div *ngIf="blogForm.get('category')?.invalid && blogForm.get('category')?.touched" class="text-red-500 text-sm">
-            La categoría es obligatoria.
-          </div>
-        </div>
-
-        <!-- Estado -->
-        <div>
-          <label for="status" class="block text-sm font-semibold">Estado</label>
-          <select 
-            id="status"
-            formControlName="status"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="draft">Borrador</option>
-            <option value="published">Publicado</option>
-          </select>
-          <div *ngIf="blogForm.get('status')?.invalid && blogForm.get('status')?.touched" class="text-red-500 text-sm">
-            El estado es obligatorio.
-          </div>
-        </div>
-
-        <!-- Botón de Agregar -->
-        <div class="flex justify-end">
+            Cancelar
+          </button>
           <button 
             type="submit" 
-            class="flex-none rounded-md px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition"
+            class="px-4 py-2 text-white rounded-md hover:opacity-90 transition"
             [style.background-color]="'#6EC1E4'"
             [disabled]="blogForm.invalid">
             {{ isEditMode ? 'Actualizar' : 'Agregar' }}

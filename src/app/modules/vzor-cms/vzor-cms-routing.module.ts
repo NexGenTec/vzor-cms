@@ -4,9 +4,8 @@ import { AuthGuard } from '../auth/guard/auth.guard';
 import { VzorCmsComponent } from './vzor-cms.component';
 import { DashboardVzorCmsComponent } from './pages/dashboard-vzor-cms/dashboard-vzor-cms.component';
 import { BlogComponent } from './pages/blog/blog.component';
-import { RecursosComponent } from './pages/recursos/recursos.component';
-import { ReviewClientesComponent } from './pages/review-clientes/review-clientes.component';
-import { RecursosDetailComponent } from './pages/recursos/components/recursos-detail/recursos-detail.component';
+import { BlogFormComponent } from './pages/blog/components/blog-form/blog-form.component';
+import { ReviewClientesComponent } from './pages/review-clientes/review-clientes.component'; //TODO: eliminar
 import { ReviewDetailComponent } from './pages/review-clientes/components/review-detail/review-detail.component';
 import { BlogDetailComponent } from './pages/blog/components/blog-detail/blog-detail.component';
 
@@ -19,9 +18,9 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardVzorCmsComponent },
       { path: 'blog', component: BlogComponent },
+      { path: 'blog/new', component: BlogFormComponent },
+      { path: 'blog/edit/:id', component: BlogFormComponent },
       { path: 'blog/:id', component: BlogDetailComponent },
-      { path: 'recursos', component: RecursosComponent },
-      { path: 'recursos/:id', component: RecursosDetailComponent },
       { path: 'review-clientes', component: ReviewClientesComponent },
       { path: 'review-clientes/:id', component: ReviewDetailComponent },
       { path: '**', redirectTo: 'errors/404' },

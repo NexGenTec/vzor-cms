@@ -2,6 +2,7 @@ import { Component, computed, signal, OnInit, ViewChild, ElementRef } from '@ang
 import { CommonModule } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { BlogService } from '../../services/blog.service';
 import { BlogFilterService } from '../../services/blog-filter.service';
@@ -10,7 +11,6 @@ import { BlogHeaderComponent } from './components/blog-header/blog-header.compon
 import { BlogRowComponent } from './components/blog-row/blog-row.component';
 import { BlogActionComponent } from './components/blog-action/blog-action.component';
 import { BlogFooterComponent } from './components/blog-footer/blog-footer.component';
-import { AddBlogModalComponent } from './components/add-blog-modal/add-blog-modal.component';
 import { ModalComponent } from '../../../dashboard/components/modal/modal/modal.component';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -26,7 +26,6 @@ import autoTable from 'jspdf-autotable';
     BlogRowComponent,
     BlogActionComponent,
     BlogFooterComponent,
-    AddBlogModalComponent,
     ModalComponent
   ],
   templateUrl: './blog.component.html',
@@ -34,8 +33,6 @@ import autoTable from 'jspdf-autotable';
 })
 export class BlogComponent implements OnInit {
   blogPosts = signal<BlogPost[]>([]);
-  isModalOpen = false;
-  selectedPost: BlogPost | null = null;
   isLoading = false;
   isModalOpenExport = false;
   isExporting: 'pdf' | 'csv' | null = null;
@@ -49,7 +46,8 @@ export class BlogComponent implements OnInit {
 
   constructor(
     private blogService: BlogService,
-    private filterService: BlogFilterService
+    private filterService: BlogFilterService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -107,42 +105,11 @@ export class BlogComponent implements OnInit {
   }
 
   openModal(): void {
-    this.selectedPost = null;
-    this.isModalOpen = true;
+    this.router.navigate(['/layout/vzor-cms/blog/new']);
   }
 
   openEditModal(post: BlogPost): void {
-    this.selectedPost = post;
-    this.isModalOpen = true;
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.selectedPost = null;
-  }
-
-  handleFormSubmit(postData: CreateBlogPostRequest): void {
-    if (this.selectedPost) {
-      // Update existing post
-      this.blogService.updateBlogPost(this.selectedPost.id, postData).subscribe({
-        next: () => {
-          toast.success('Post actualizado exitosamente!');
-          this.loadBlogPosts();
-          this.closeModal();
-        },
-        error: (error) => this.handleRequestError(error)
-      });
-    } else {
-      // Create new post
-      this.blogService.createBlogPost(postData).subscribe({
-        next: () => {
-          toast.success('Post creado exitosamente!');
-          this.loadBlogPosts();
-          this.closeModal();
-        },
-        error: (error) => this.handleRequestError(error)
-      });
-    }
+    this.router.navigate(['/layout/vzor-cms/blog/edit', post.id]);
   }
 
   deleteBlogPost(id: number): void {

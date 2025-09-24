@@ -105,9 +105,8 @@ export class Menu {
           route: '/layout/vzor-cms',
           children: [
             { label: 'Dashboard', route: '/layout/vzor-cms/dashboard' },
-            { label: 'Blog', route: '/layout/vzor-cms/blog' },
-            { label: 'Recursos', route: '/layout/vzor-cms/recursos' },
-            { label: 'Review', route: '/layout/vzor-cms/review-clientes' },
+            { label: 'Blog y recursos', route: '/layout/vzor-cms/blog' },
+            // { label: 'Review', route: '/layout/vzor-cms/review-clientes' },
           ],
         },
         // {

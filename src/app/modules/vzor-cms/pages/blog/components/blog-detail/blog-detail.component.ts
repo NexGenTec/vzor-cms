@@ -40,4 +40,11 @@ export class BlogDetailComponent implements OnInit {
     this.location.back();
   }
 
+  onImageError(event: any): void {
+    event.target.src = 'assets/images/no_productos.png';
+  }
+
+  get hasSections(): boolean {
+    return !!(this.blogPost?.sections && this.blogPost.sections.length > 0);
+  }
 }

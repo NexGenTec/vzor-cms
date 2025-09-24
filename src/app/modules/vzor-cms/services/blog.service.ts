@@ -44,6 +44,13 @@ export class BlogService {
     const newPost: BlogPost = {
       id,
       ...postData,
+      sections: postData.sections.length > 0 ? postData.sections : [{
+        f_title: '',
+        f_subtitle: '',
+        f_paragraph: '',
+        f_img: [],
+        f_media_links: []
+      }],
       createdAt: new Date(),
       updatedAt: new Date()
     };
