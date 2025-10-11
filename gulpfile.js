@@ -5,46 +5,40 @@ const argv = require("yargs").argv;
 // Definir la configuración por defecto para clientes
 const clientes = {
   clienteA: {
-    apiKey: "API_KEY_CLIENTE_A",
-    authDomain: "clienteA.firebaseapp.com",
-    projectId: "clienteA",
-    storageBucket: "clienteA.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:clienteA",
-    measurementId: "G-CLIENTEA",
-    nombre: "Cliente A",
-    colorPrincipal: "#FF5733",
-    logo: "assets/logos/clienteA.png"
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "vzor-cms.firebasestorage.app",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   },
   clienteB: {
-    apiKey: "API_KEY_CLIENTE_B",
-    authDomain: "clienteB.firebaseapp.com",
-    projectId: "clienteB",
-    storageBucket: "clienteB.appspot.com",
-    messagingSenderId: "987654321",
-    appId: "1:987654321:web:clienteB",
-    measurementId: "G-CLIENTEB",
-    nombre: "Cliente B",
-    colorPrincipal: "#33FF57",
-    logo: "assets/logos/clienteB.png"
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "vzor-cms.firebasestorage.app",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   },
   clienteC: {
-    apiKey: "AIzaSyA1CtsOCVQJjDWnKijEnuz1x1bzLtdaxqk",
-    authDomain: "web-vzor-cms.firebaseapp.com",
-    projectId: "web-vzor-cms",
-    storageBucket: "web-vzor-cms.firebasestorage.app",
-    messagingSenderId: "71836872068",
-    appId: "1:71836872068:web:7a024ad489272b78abc1d1",
-    measurementId: "G-XXXXXXXXXX"
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "vzor-cms.firebasestorage.app",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   },
   nexgen: {
-     apiKey: "AIzaSyA1CtsOCVQJjDWnKijEnuz1x1bzLtdaxqk",
-    authDomain: "web-vzor-cms.firebaseapp.com",
-    projectId: "web-vzor-cms",
-    storageBucket: "web-vzor-cms.firebasestorage.app",
-    messagingSenderId: "71836872068",
-    appId: "1:71836872068:web:7a024ad489272b78abc1d1",
-    measurementId: "G-XXXXXXXXXX"
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "vzor-cms.firebasestorage.app",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   }
 };
 
