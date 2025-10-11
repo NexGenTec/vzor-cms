@@ -5,7 +5,7 @@ import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideFirebaseApp, initializeApp, FirebaseAppModule } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { environment } from './environments/environment.prod';
+import { environment } from './environments/environment';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
@@ -21,7 +21,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule, AppRoutingModule), 
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore()),
+    provideFirestore(() => getFirestore(initializeApp(environment.firebaseConfig), environment.firestoreConfig.databaseId)),
     FirebaseAppModule,
     AngularFireModule,
     AngularFirestore,

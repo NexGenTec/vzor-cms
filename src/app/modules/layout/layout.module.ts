@@ -4,7 +4,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { LayoutRoutingModule } from './layout-routing.module';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 @NgModule({ 
     imports: [LayoutRoutingModule, AngularSvgIconModule.forRoot()], 
     providers: [provideHttpClient(withInterceptorsFromDi()), { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig }],
