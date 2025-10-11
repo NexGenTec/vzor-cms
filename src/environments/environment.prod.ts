@@ -6,17 +6,14 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyA1CtsOCVQJjDWnKijEnuz1x1bzLtdaxqk",
-    authDomain: "web-vzor-cms.firebaseapp.com",
-    projectId: "web-vzor-cms",
-    storageBucket: "web-vzor-cms.firebasestorage.app",
-    messagingSenderId: "71836872068",
-    appId: "1:71836872068:web:7a024ad489272b78abc1d1",
-    measurementId: "G-YCK6W5BRK9"
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "vzor-cms.firebasestorage.app",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   },
-  // Opcional: otras propiedades específicas
-  nombre: "VZOR CMS", 
-  logo: "assets/logos/vzor.png"
 };
 
 
@@ -26,5 +23,13 @@ export const environment = {
  *
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
+ * 
+ * # Reconstruir la aplicación
+  ng build --configuration production
+
+  # Copiar archivos al directorio público
+  xcopy "dist\nex-manager\browser" "public" /E /I /Y
+
+  # Desplegar
+  firebase deploy --only hosting
  */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
