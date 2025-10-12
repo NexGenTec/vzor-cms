@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BlogPost, CreateBlogPostRequest, UpdateBlogPostRequest } from '../models/blog.model';
@@ -10,27 +10,53 @@ import { BlogPost, CreateBlogPostRequest, UpdateBlogPostRequest } from '../model
 export class BlogService {
   private collection = 'blog-posts';
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: Firestore) {}
 
   // GET - Obtener todos los posts
   getBlogPosts(): Observable<BlogPost[]> {
-    return this.firestore.collection<BlogPost>(this.collection).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as any;
-        const docId = a.payload.doc.id;
-        return { 
-          ...data, 
-          id: +docId,
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
-        } as BlogPost;
-      }))
-    );
+    const blogCollection = collection(this.firestore, this.collection);
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(blogCollection, (querySnapshot) => {
+        const posts = querySnapshot.docs.map(doc => {
+          const data = doc.data() as any;
+          return {
+            ...data,
+            id: +doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as BlogPost;
+        });
+        observer.next(posts);
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener un post por ID
   getBlogPost(id: number): Observable<BlogPost | undefined> {
-    return this.firestore.doc<BlogPost>(`${this.collection}/${id}`).valueChanges();
+    const blogDoc = doc(this.firestore, this.collection, id.toString());
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(blogDoc, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as any;
+          observer.next({
+            ...data,
+            id: +docSnapshot.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as BlogPost);
+        } else {
+          observer.next(undefined);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener un post por ID (alias)
@@ -40,9 +66,7 @@ export class BlogService {
 
   // POST - Crear nuevo post
   createBlogPost(postData: CreateBlogPostRequest): Observable<void> {
-    const id = Date.now();
-    const newPost: BlogPost = {
-      id,
+    const newPost = {
       ...postData,
       sections: postData.sections.length > 0 ? postData.sections : [{
         f_title: '',
@@ -55,12 +79,14 @@ export class BlogService {
       updatedAt: new Date()
     };
 
-    return from(this.firestore.doc(`${this.collection}/${id}`).set(newPost));
+    const blogCollection = collection(this.firestore, this.collection);
+    return from(addDoc(blogCollection, newPost).then(() => {}));
   }
 
   // PUT - Actualizar post
   updateBlogPost(id: number, postData: UpdateBlogPostRequest): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).update({
+    const blogDoc = doc(this.firestore, this.collection, id.toString());
+    return from(updateDoc(blogDoc, {
       ...postData,
       updatedAt: new Date()
     }));
@@ -68,6 +94,7 @@ export class BlogService {
 
   // DELETE - Eliminar post
   deleteBlogPost(id: number): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).delete());
+    const blogDoc = doc(this.firestore, this.collection, id.toString());
+    return from(deleteDoc(blogDoc));
   }
 }

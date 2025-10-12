@@ -11,5 +11,6 @@ export const appConfig: ApplicationConfig = {
    [ provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(),
     { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
     { provide: 'FIRESTORE_DATABASE_ID', useValue: environment.firestoreConfig.databaseId },
+    { provide: 'FIRESTORE_SETTINGS', useValue: { databaseId: environment.firestoreConfig.databaseId } },
    ]
 };

@@ -3,30 +3,41 @@ import { AppComponent } from './app/app.component';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideFirebaseApp, initializeApp, FirebaseAppModule } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 import { environment } from './environments/environment';
-import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 if (environment.production) {
   enableProdMode();
   //show this warning only on prod mode
-  if (window) {
+  if (typeof window !== 'undefined') {
     selfXSSWarning();
   }
 }
 
+// Console para verificar la configuración de Firestore
+console.log('🔥 Firestore Configuration:', {
+  projectId: environment.firebaseConfig.projectId,
+  databaseId: environment.firestoreConfig.databaseId,
+  expectedUrl: `projects/${environment.firebaseConfig.projectId}/databases/${environment.firestoreConfig.databaseId}`,
+  fullConfig: environment
+});
+
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(BrowserModule, AppRoutingModule), 
+    importProvidersFrom(BrowserModule, AppRoutingModule),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideFirestore(() => getFirestore(initializeApp(environment.firebaseConfig), environment.firestoreConfig.databaseId)),
-    FirebaseAppModule,
-    AngularFireModule,
-    AngularFirestore,
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
-  provideAnimations()],
+    provideFirestore(() => {
+      const firestore = getFirestore(initializeApp(environment.firebaseConfig), environment.firestoreConfig.databaseId);
+      console.log('🔥 Firestore initialized with database:', environment.firestoreConfig.databaseId);
+      return firestore;
+    }),
+    provideAuth(() => getAuth(initializeApp(environment.firebaseConfig))),
+    provideStorage(() => getStorage(initializeApp(environment.firebaseConfig))),
+    provideAnimations()
+  ],
 }).catch((err) => console.error(err));
 
 function selfXSSWarning() {

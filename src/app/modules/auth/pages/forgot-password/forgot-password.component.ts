@@ -5,7 +5,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { toast } from 'ngx-sonner';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AuthService } from '../../service/auth.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Auth } from '@angular/fire/auth';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -19,7 +19,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private readonly _formBuilder: FormBuilder, 
     private readonly _router: Router,
-    private afAuth: AngularFireAuth, 
+    private auth: Auth, 
     private readonly authService: AuthService,) {
     this.forgotPasswordForm = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

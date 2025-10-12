@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Recurso, CreateRecursoRequest, UpdateRecursoRequest } from '../models/recursos.model';
@@ -10,27 +10,53 @@ import { Recurso, CreateRecursoRequest, UpdateRecursoRequest } from '../models/r
 export class RecursosService {
   private collection = 'recursos';
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: Firestore) {}
 
   // GET - Obtener todos los recursos
   getRecursos(): Observable<Recurso[]> {
-    return this.firestore.collection<Recurso>(this.collection).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as any;
-        const docId = a.payload.doc.id;
-        return { 
-          ...data, 
-          id: +docId,
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
-        } as Recurso;
-      }))
-    );
+    const recursosCollection = collection(this.firestore, this.collection);
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(recursosCollection, (querySnapshot) => {
+        const recursos = querySnapshot.docs.map(doc => {
+          const data = doc.data() as any;
+          return {
+            ...data,
+            id: +doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as Recurso;
+        });
+        observer.next(recursos);
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener un recurso por ID
   getRecurso(id: number): Observable<Recurso | undefined> {
-    return this.firestore.doc<Recurso>(`${this.collection}/${id}`).valueChanges();
+    const recursoDoc = doc(this.firestore, this.collection, id.toString());
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(recursoDoc, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as any;
+          observer.next({
+            ...data,
+            id: +docSnapshot.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as Recurso);
+        } else {
+          observer.next(undefined);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener un recurso por ID (alias)
@@ -40,21 +66,20 @@ export class RecursosService {
 
   // POST - Crear nuevo recurso
   createRecurso(recursoData: CreateRecursoRequest): Observable<void> {
-    const id = Date.now();
-    const newRecurso: Recurso = {
-      id,
+    const newRecurso = {
       ...recursoData,
-      downloads: 0,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
-    return from(this.firestore.doc(`${this.collection}/${id}`).set(newRecurso));
+    const recursosCollection = collection(this.firestore, this.collection);
+    return from(addDoc(recursosCollection, newRecurso).then(() => {}));
   }
 
   // PUT - Actualizar recurso
   updateRecurso(id: number, recursoData: UpdateRecursoRequest): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).update({
+    const recursoDoc = doc(this.firestore, this.collection, id.toString());
+    return from(updateDoc(recursoDoc, {
       ...recursoData,
       updatedAt: new Date()
     }));
@@ -62,21 +87,7 @@ export class RecursosService {
 
   // DELETE - Eliminar recurso
   deleteRecurso(id: number): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).delete());
-  }
-
-  // Incrementar descargas
-  incrementDownloads(id: number): Observable<void> {
-    // Obtener el recurso actual, incrementar downloads y actualizar
-    return this.firestore.doc(`${this.collection}/${id}`).valueChanges().pipe(
-      switchMap((recurso: any) => {
-        if (recurso) {
-          return from(this.firestore.doc(`${this.collection}/${id}`).update({
-            downloads: (recurso.downloads || 0) + 1
-          }));
-        }
-        return from(Promise.resolve());
-      })
-    );
+    const recursoDoc = doc(this.firestore, this.collection, id.toString());
+    return from(deleteDoc(recursoDoc));
   }
 }

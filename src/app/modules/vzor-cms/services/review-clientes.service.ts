@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ReviewCliente, CreateReviewRequest, UpdateReviewRequest } from '../models/review-clientes.model';
@@ -10,27 +10,53 @@ import { ReviewCliente, CreateReviewRequest, UpdateReviewRequest } from '../mode
 export class ReviewClientesService {
   private collection = 'review-clientes';
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: Firestore) {}
 
   // GET - Obtener todas las reseñas
   getReviews(): Observable<ReviewCliente[]> {
-    return this.firestore.collection<ReviewCliente>(this.collection).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as any;
-        const docId = a.payload.doc.id;
-        return { 
-          ...data, 
-          id: +docId,
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
-        } as ReviewCliente;
-      }))
-    );
+    const reviewsCollection = collection(this.firestore, this.collection);
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(reviewsCollection, (querySnapshot) => {
+        const reviews = querySnapshot.docs.map(doc => {
+          const data = doc.data() as any;
+          return {
+            ...data,
+            id: +doc.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as ReviewCliente;
+        });
+        observer.next(reviews);
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener una reseña por ID
   getReview(id: number): Observable<ReviewCliente | undefined> {
-    return this.firestore.doc<ReviewCliente>(`${this.collection}/${id}`).valueChanges();
+    const reviewDoc = doc(this.firestore, this.collection, id.toString());
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(reviewDoc, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data() as any;
+          observer.next({
+            ...data,
+            id: +docSnapshot.id,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+          } as ReviewCliente);
+        } else {
+          observer.next(undefined);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
   // GET - Obtener una reseña por ID (alias)
@@ -40,20 +66,20 @@ export class ReviewClientesService {
 
   // POST - Crear nueva reseña
   createReview(reviewData: CreateReviewRequest): Observable<void> {
-    const id = Date.now();
-    const newReview: ReviewCliente = {
-      id,
+    const newReview = {
       ...reviewData,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
-    return from(this.firestore.doc(`${this.collection}/${id}`).set(newReview));
+    const reviewsCollection = collection(this.firestore, this.collection);
+    return from(addDoc(reviewsCollection, newReview).then(() => {}));
   }
 
   // PUT - Actualizar reseña
   updateReview(id: number, reviewData: UpdateReviewRequest): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).update({
+    const reviewDoc = doc(this.firestore, this.collection, id.toString());
+    return from(updateDoc(reviewDoc, {
       ...reviewData,
       updatedAt: new Date()
     }));
@@ -61,6 +87,7 @@ export class ReviewClientesService {
 
   // DELETE - Eliminar reseña
   deleteReview(id: number): Observable<void> {
-    return from(this.firestore.doc(`${this.collection}/${id}`).delete());
+    const reviewDoc = doc(this.firestore, this.collection, id.toString());
+    return from(deleteDoc(reviewDoc));
   }
 }

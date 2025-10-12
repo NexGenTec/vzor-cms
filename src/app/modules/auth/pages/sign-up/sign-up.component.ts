@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { AuthService } from '../../service/auth.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Auth } from '@angular/fire/auth';
 import { toast } from 'ngx-sonner';
 import { CommonModule, NgIf } from '@angular/common';
 import { UserService } from '../../../management/service/user.service';
@@ -29,7 +29,7 @@ export class SignUpComponent implements OnInit {
     private readonly _formBuilder: FormBuilder,
     private readonly _router: Router,
     private readonly _authService: AuthService,
-    private readonly _afAuth: AngularFireAuth,
+    private readonly _auth: Auth,
     private readonly _User: UserService,
 
   ) {}
@@ -48,7 +48,7 @@ export class SignUpComponent implements OnInit {
       }
     );    
   
-    const user = await this._afAuth.currentUser;
+    const user = this._auth.currentUser;
     if (user) {
       this._router.navigate(['/auth/sign-in']);
     }

@@ -15,9 +15,16 @@ export const environment = {
   },
   firestoreConfig: {
     projectId: "vzor-cms",
-    databaseId: "vzor-web"
+    databaseId: "(default)"
   }
 };
+
+// Console para verificar la configuración
+console.log('🔧 Firebase Configuration:', {
+  projectId: environment.firebaseConfig.projectId,
+  databaseId: environment.firestoreConfig.databaseId,
+  fullDatabasePath: `projects/${environment.firebaseConfig.projectId}/databases/${environment.firestoreConfig.databaseId}`,
+});
 
 /*
  * For easier debugging in development mode, you can import the following file
