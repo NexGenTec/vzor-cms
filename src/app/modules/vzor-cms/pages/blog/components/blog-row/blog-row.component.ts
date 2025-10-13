@@ -17,7 +17,7 @@ export class BlogRowComponent {
   @Input() blogPost!: BlogPost;
   @Input() onEditPost!: (post: BlogPost) => void;
   @Output() editPost = new EventEmitter<BlogPost>();
-  @Output() deletePost = new EventEmitter<number>();
+  @Output() deletePost = new EventEmitter<string>();
 
   constructor(private router: Router) {}
 
@@ -31,16 +31,34 @@ export class BlogRowComponent {
     }
   }
 
-  formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  viewPost(id: string): void {
+    this.router.navigate(['/layout/vzor-cms/blog', id]);
+    toast.info(`Viendo post: ${this.blogPost.title}`);
   }
 
-  viewPost(id: number): void {
-    this.router.navigate(['/layout/vzor-cms/blog', id.toString()]);
-    toast.info(`Viendo post: ${this.blogPost.title}`);
+  onImageError(event: any): void {
+    event.target.src = 'assets/images/no_productos.png';
+  }
+
+  getFormattedDate(date: any): Date | null {
+    if (!date) return null;
+    
+    try {
+      if (date instanceof Date) {
+        return date;
+      } else if (date && typeof date === 'object' && date.toDate) {
+        // Firestore Timestamp
+        return date.toDate();
+      } else if (date && typeof date === 'object' && date.seconds) {
+        // Firestore Timestamp with seconds
+        return new Date(date.seconds * 1000);
+      } else if (typeof date === 'string' || typeof date === 'number') {
+        return new Date(date);
+      }
+      return null;
+    } catch (error) {
+      console.warn('Error converting date:', date, error);
+      return null;
+    }
   }
 }

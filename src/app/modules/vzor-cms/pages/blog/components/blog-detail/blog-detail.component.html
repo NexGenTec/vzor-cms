@@ -14,7 +14,15 @@
     <!-- Información principal -->
     <div class="space-y-6">
       <div class="text-center">
-        <div class="w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: #003C71;">
+        <!-- Imagen principal del post -->
+        <div *ngIf="blogPost?.mainImageUrl" class="mb-4">
+          <img [src]="blogPost?.mainImageUrl" 
+               [alt]="blogPost?.title" 
+               class="w-32 h-32 object-cover rounded-lg border border-gray-200 mx-auto"
+               (error)="onImageError($event)">
+        </div>
+        <!-- Imagen por defecto si no hay imagen principal -->
+        <div *ngIf="!blogPost?.mainImageUrl" class="w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: #003C71;">
           <img src="assets/avatars/avt-02.jpg" alt="Blog" class="w-12 h-12 rounded-lg">
         </div>
         <h1 class="text-3xl font-bold text-gray-900">{{ blogPost?.title }}</h1>
@@ -29,7 +37,7 @@
             {{ blogPost?.category || 'Sin categoría' }}
           </span>
           <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-                [ngClass]="blogPost?.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'">
+                [ngClass]="blogPost?.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
             {{ blogPost?.status === 'published' ? 'Publicado' : 'Borrador' }}
           </span>
         </div>
@@ -126,11 +134,15 @@
           </div>
           <div class="flex justify-between">
             <span class="text-gray-600">Autor:</span>
-            <span class="font-medium">{{ blogPost?.author }}</span>
+            <span class="font-medium">{{ blogPost?.author || 'Sin autor' }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-600">Categoría:</span>
             <span class="font-medium">{{ blogPost?.category }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Fecha:</span>
+            <span class="font-medium">{{ getFormattedDate(blogPost?.createdAt) | date:'short' || 'Sin fecha' }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-600">Estado:</span>
@@ -139,19 +151,6 @@
         </div>
       </div>
 
-      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Estadísticas</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="text-center">
-            <div class="text-2xl font-bold text-blue-600">0</div>
-            <div class="text-sm text-gray-600">Vistas</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-green-600">0</div>
-            <div class="text-sm text-gray-600">Me gusta</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

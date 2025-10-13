@@ -84,10 +84,10 @@ export class BlogComponent implements OnInit {
       const matchesSearch = 
         post.title.toLowerCase().includes(search) ||
         post.excerpt.toLowerCase().includes(search) ||
-        post.author.toLowerCase().includes(search);
+        (post.author && post.author.toLowerCase().includes(search));
       
       const matchesCategory = category === 'Todas' || post.category === category;
-      const matchesStatus = status === 'Todas' || post.status === status;
+      const matchesStatus = status === 'Todas' || (status === 'Publicado' && post.status === 'published') || (status === 'Borrador' && post.status === 'draft');
       
       return matchesSearch && matchesCategory && matchesStatus;
     });
@@ -112,7 +112,7 @@ export class BlogComponent implements OnInit {
     this.router.navigate(['/layout/vzor-cms/blog/edit', post.id]);
   }
 
-  deleteBlogPost(id: number): void {
+  deleteBlogPost(id: string): void {
     this.blogService.deleteBlogPost(id).subscribe({
       next: () => {
         toast.success('Post eliminado exitosamente!');
@@ -182,12 +182,12 @@ export class BlogComponent implements OnInit {
     doc.text('Blog Posts - VZOR CMS', 14, 22);
     
     autoTable(doc, {
-      head: [['Título', 'Autor', 'Categoría', 'Fecha de Creación']],
+      head: [['Título', 'Autor', 'Categoría', 'Fecha']],
       body: posts.map(post => [
         post.title,
-        post.author,
+        post.author || 'Sin autor',
         post.category,
-        new Date(post.createdAt).toLocaleDateString('es-ES')
+        post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Sin fecha'
       ]),
       startY: 30,
     });
@@ -199,12 +199,12 @@ export class BlogComponent implements OnInit {
   exportToCSV(): void {
     const posts = this.filteredBlogPosts();
     const csvContent = [
-      ['Título', 'Autor', 'Categoría', 'Fecha de Creación'],
+      ['Título', 'Autor', 'Categoría', 'Fecha'],
       ...posts.map(post => [
         post.title,
-        post.author,
+        post.author || 'Sin autor',
         post.category,
-        new Date(post.createdAt).toLocaleDateString('es-ES')
+        post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'Sin fecha'
       ])
     ].map(row => row.join(',')).join('\n');
     

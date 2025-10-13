@@ -1,6 +1,6 @@
 {
   "name": "nex-manager",
-  "displayName": "vzor-cms", 
+  "displayName": "vzor-cms",
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",

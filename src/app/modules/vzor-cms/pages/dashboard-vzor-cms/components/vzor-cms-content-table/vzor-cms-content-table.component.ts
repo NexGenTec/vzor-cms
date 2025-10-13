@@ -7,11 +7,11 @@ import { Recurso } from '../../../../models/recursos.model';
 import { ReviewCliente } from '../../../../models/review-clientes.model';
 
 interface ContentItem {
-  id: number;
+  id: string;
   title: string;
   type: 'blog' | 'recurso' | 'review';
   category: string;
-  createdAt: Date;
+  date: string;
   status: string;
 }
 
@@ -40,6 +40,38 @@ export class VzorCmsContentTableComponent implements OnInit, OnChanges {
     }
   }
 
+  private formatDate(date: any): string {
+    if (!date) return 'Sin fecha';
+    
+    try {
+      let dateObj: Date;
+      
+      if (date instanceof Date) {
+        dateObj = date;
+      } else if (typeof date === 'string' || typeof date === 'number') {
+        dateObj = new Date(date);
+      } else if (date && typeof date === 'object' && date.toDate) {
+        // Firestore Timestamp
+        dateObj = date.toDate();
+      } else if (date && typeof date === 'object' && date.seconds) {
+        // Firestore Timestamp with seconds
+        dateObj = new Date(date.seconds * 1000);
+      } else {
+        return 'Sin fecha';
+      }
+      
+      // Verificar si la fecha es válida
+      if (isNaN(dateObj.getTime())) {
+        return 'Sin fecha';
+      }
+      
+      return dateObj.toISOString().split('T')[0];
+    } catch (error) {
+      console.warn('Error formatting date:', date, error);
+      return 'Sin fecha';
+    }
+  }
+
   loadContentItems(): void {
     const items: ContentItem[] = [];
 
@@ -50,7 +82,7 @@ export class VzorCmsContentTableComponent implements OnInit, OnChanges {
         title: post.title,
         type: 'blog',
         category: post.category,
-        createdAt: post.createdAt,
+        date: this.formatDate(post.createdAt),
         status: 'Publicado'
       });
     });
@@ -58,11 +90,11 @@ export class VzorCmsContentTableComponent implements OnInit, OnChanges {
     // Agregar recursos
     this.recursos.forEach(recurso => {
       items.push({
-        id: recurso.id,
+        id: recurso.id.toString(),
         title: recurso.title,
         type: 'recurso',
         category: recurso.category,
-        createdAt: recurso.createdAt,
+        date: this.formatDate(recurso.createdAt),
         status: 'Disponible'
       });
     });
@@ -70,17 +102,17 @@ export class VzorCmsContentTableComponent implements OnInit, OnChanges {
     // Agregar reseñas
     this.reviews.forEach(review => {
       items.push({
-        id: review.id,
+        id: review.id.toString(),
         title: `${review.clientName} - ${review.project}`,
         type: 'review',
         category: 'Reseña',
-        createdAt: review.createdAt,
+        date: this.formatDate(review.createdAt),
         status: 'Activa'
       });
     });
 
-    // Ordenar por fecha de creación (más recientes primero)
-    this.contentItems = items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    // Ordenar por fecha (más recientes primero)
+    this.contentItems = items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 
   getTypeIcon(type: string): string {
@@ -110,11 +142,4 @@ export class VzorCmsContentTableComponent implements OnInit, OnChanges {
     }
   }
 
-  formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  }
 }

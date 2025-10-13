@@ -7,13 +7,14 @@ export interface BlogSection {
 }
 
 export interface BlogPost {
-  id: number;
+  id: string;
   title: string;
   excerpt: string;
   author: string;
   category: string;
   status: 'draft' | 'published';
   sections: BlogSection[];
+  mainImageUrl?: string; // Imagen principal del post
   createdAt: Date;
   updatedAt: Date;
   selected?: boolean;
@@ -26,6 +27,7 @@ export interface CreateBlogPostRequest {
   category: string;
   status: 'draft' | 'published';
   sections: BlogSection[];
+  mainImageUrl?: string;
 }
 
 export interface UpdateBlogPostRequest extends Partial<CreateBlogPostRequest> {

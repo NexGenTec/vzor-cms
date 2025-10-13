@@ -34,7 +34,7 @@
             (click)="onSubmit()"
             [disabled]="blogForm.invalid || isLoading"
             class="px-6 py-2 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-            [style.background-color]="'#6EC1E4'"
+            style="background-color: #6EC1E4;"
           >
             <span *ngIf="isLoading" class="flex items-center">
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -148,6 +148,59 @@
                   El extracto es obligatorio.
                 </div>
               </div>
+
+              <!-- Imagen Principal -->
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Imagen Principal del Post <span class="text-red-500">*</span>
+                </label>
+                <p class="text-sm text-gray-500 mb-3" *ngIf="!isEditMode">
+                  Debes subir una imagen para este post
+                </p>
+                <p class="text-sm text-gray-500 mb-3" *ngIf="isEditMode">
+                  Imagen actual del post. Puedes cambiarla subiendo una nueva imagen.
+                </p>
+                
+                <!-- Preview de imagen principal -->
+                <div *ngIf="mainImagePreview" class="mb-4">
+                  <div class="relative inline-block">
+                    <img [src]="mainImagePreview" 
+                         alt="Preview" 
+                         class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                    <button type="button"
+                            (click)="removeMainImage()"
+                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
+                      ×
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Input de archivo para imagen principal -->
+                <div class="flex items-center gap-4">
+                  <input 
+                    type="file"
+                    id="mainImageFile"
+                    accept="image/*"
+                    (change)="onMainImageSelected($event)"
+                    class="hidden"
+                    #mainImageInput>
+                  
+                  <button type="button"
+                          (click)="mainImageInput.click()"
+                          [disabled]="isUploadingMainImage"
+                          class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    {{ isUploadingMainImage ? 'Subiendo...' : 'Subir Imagen Principal' }}
+                  </button>
+
+                  <span class="text-sm text-gray-500">
+                    Máximo 5MB. Formatos: JPG, PNG, GIF
+                  </span>
+                </div>
+
+              </div>
             </div>
           </div>
 
@@ -158,7 +211,10 @@
               <button 
                 type="button"
                 (click)="addSection()"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                class="px-4 py-2 text-white rounded-lg text-sm transition-colors"
+                style="background-color: #6EC1E4;"
+                onmouseover="this.style.backgroundColor='#5BB3D6'" 
+                onmouseout="this.style.backgroundColor='#6EC1E4'"
               >
                 + Agregar Sección
               </button>
@@ -231,23 +287,33 @@
                 <!-- Imágenes -->
                 <div>
                   <div class="flex justify-between items-center mb-3">
-                    <label class="block text-sm font-medium text-gray-700">Imágenes</label>
+                    <label class="block text-sm font-medium text-gray-700">Subir Imágenes</label>
                     <button 
                       type="button"
                       (click)="addImageToSection(i)"
-                      class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+                      class="px-3 py-1 text-white rounded text-sm transition-colors"
+                      style="background-color: #6EC1E4;"
+                      onmouseover="this.style.backgroundColor='#5BB3D6'" 
+                      onmouseout="this.style.backgroundColor='#6EC1E4'"
                     >
-                      + Agregar Imagen
+                      + Subir Imagen
                     </button>
                   </div>
                   <div *ngFor="let img of section.get('f_img')?.value; let j = index" class="flex items-center gap-3 mb-3">
+                    <!-- Preview de imagen -->
+                    <div *ngIf="img" class="w-16 h-16 border border-gray-200 rounded-lg overflow-hidden">
+                      <img [src]="img" alt="Preview" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <!-- Input de archivo -->
                     <input 
-                      type="text"
-                      [value]="img"
-                      (input)="updateImageValue(i, j, $event)"
+                      type="file"
+                      accept="image/*"
+                      (change)="onSectionImageSelected($event, i, j)"
                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="URL de la imagen"
+                      #sectionImageInput
                     />
+                    
                     <button 
                       type="button"
                       (click)="removeImageFromSection(i, j)"
@@ -256,6 +322,9 @@
                       Eliminar
                     </button>
                   </div>
+                  <p class="text-sm text-gray-500 mt-2">
+                    Máximo 5MB por imagen. Formatos: JPG, PNG, GIF
+                  </p>
                 </div>
 
                 <!-- Enlaces de medios -->
@@ -265,7 +334,10 @@
                     <button 
                       type="button"
                       (click)="addMediaLinkToSection(i)"
-                      class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+                      class="px-3 py-1 text-white rounded text-sm transition-colors"
+                      style="background-color: #6EC1E4;"
+                      onmouseover="this.style.backgroundColor='#5BB3D6'" 
+                      onmouseout="this.style.backgroundColor='#6EC1E4'"
                     >
                       + Agregar Enlace
                     </button>

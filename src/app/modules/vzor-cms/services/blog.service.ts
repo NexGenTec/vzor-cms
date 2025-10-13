@@ -21,9 +21,7 @@ export class BlogService {
           const data = doc.data() as any;
           return {
             ...data,
-            id: +doc.id,
-            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+            id: doc.id
           } as BlogPost;
         });
         observer.next(posts);
@@ -36,17 +34,15 @@ export class BlogService {
   }
 
   // GET - Obtener un post por ID
-  getBlogPost(id: number): Observable<BlogPost | undefined> {
-    const blogDoc = doc(this.firestore, this.collection, id.toString());
+  getBlogPost(id: string): Observable<BlogPost | undefined> {
+    const blogDoc = doc(this.firestore, this.collection, id);
     return new Observable(observer => {
       const unsubscribe = onSnapshot(blogDoc, (docSnapshot) => {
         if (docSnapshot.exists()) {
           const data = docSnapshot.data() as any;
           observer.next({
             ...data,
-            id: +docSnapshot.id,
-            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
-            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
+            id: docSnapshot.id
           } as BlogPost);
         } else {
           observer.next(undefined);
@@ -60,7 +56,7 @@ export class BlogService {
   }
 
   // GET - Obtener un post por ID (alias)
-  getBlogPostById(id: number): Observable<BlogPost | undefined> {
+  getBlogPostById(id: string): Observable<BlogPost | undefined> {
     return this.getBlogPost(id);
   }
 
@@ -84,8 +80,8 @@ export class BlogService {
   }
 
   // PUT - Actualizar post
-  updateBlogPost(id: number, postData: UpdateBlogPostRequest): Observable<void> {
-    const blogDoc = doc(this.firestore, this.collection, id.toString());
+  updateBlogPost(id: string, postData: UpdateBlogPostRequest): Observable<void> {
+    const blogDoc = doc(this.firestore, this.collection, id);
     return from(updateDoc(blogDoc, {
       ...postData,
       updatedAt: new Date()
@@ -93,8 +89,8 @@ export class BlogService {
   }
 
   // DELETE - Eliminar post
-  deleteBlogPost(id: number): Observable<void> {
-    const blogDoc = doc(this.firestore, this.collection, id.toString());
+  deleteBlogPost(id: string): Observable<void> {
+    const blogDoc = doc(this.firestore, this.collection, id);
     return from(deleteDoc(blogDoc));
   }
 }

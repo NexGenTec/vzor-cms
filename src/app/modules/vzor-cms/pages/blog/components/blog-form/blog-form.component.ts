@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { BlogService } from '../../../../services/blog.service';
+import { StorageService } from '../../../../services/storage.service';
 import { BlogPost, CreateBlogPostRequest, BlogSection } from '../../../../models/blog.model';
 
 @Component({
@@ -16,12 +17,16 @@ import { BlogPost, CreateBlogPostRequest, BlogSection } from '../../../../models
 export class BlogFormComponent implements OnInit {
   blogForm!: FormGroup;
   isEditMode = false;
-  blogPostId: number | null = null;
+  blogPostId: string | null = null;
   isLoading = false;
+  selectedMainImage: File | null = null;
+  mainImagePreview: string | null = null;
+  isUploadingMainImage = false;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private blogService = inject(BlogService);
+  private storageService = inject(StorageService);
   private fb = inject(FormBuilder);
 
   ngOnInit(): void {
@@ -47,7 +52,7 @@ export class BlogFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
-      this.blogPostId = parseInt(id);
+      this.blogPostId = id;
       this.loadBlogPost();
     }
   }
@@ -79,6 +84,14 @@ export class BlogFormComponent implements OnInit {
       category: post.category,
       status: post.status
     });
+
+    // Mostrar imagen existente en modo edición
+    if (post.mainImageUrl) {
+      this.mainImagePreview = post.mainImageUrl;
+    } else {
+      this.mainImagePreview = null;
+    }
+    this.selectedMainImage = null;
 
     // Limpiar secciones existentes
     while (this.sections.length !== 0) {
@@ -140,7 +153,52 @@ export class BlogFormComponent implements OnInit {
     section.get('f_media_links')?.setValue([...currentLinks]);
   }
 
+  onSectionImageSelected(event: any, sectionIndex: number, imageIndex: number): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        toast.error('Por favor, selecciona un archivo de imagen válido');
+        return;
+      }
+
+      // Validar tamaño (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('La imagen debe ser menor a 5MB');
+        return;
+      }
+
+      // Subir imagen a Firebase Storage
+      this.uploadSectionImage(file, sectionIndex, imageIndex);
+    }
+  }
+
+  private async uploadSectionImage(file: File, sectionIndex: number, imageIndex: number): Promise<void> {
+    try {
+      const fileName = this.storageService.generateFileName(file.name);
+      // Usar el ID del blog si existe, o generar uno temporal
+      const blogId = this.blogPostId || this.generateTempId();
+      const path = `blog/${blogId}/sections/section-${sectionIndex}/${fileName}`;
+      
+      const imageUrl = await this.storageService.uploadImage(file, path).toPromise();
+      
+      if (imageUrl) {
+        // Actualizar el valor en el formulario
+        const section = this.sections.at(sectionIndex);
+        const images = section.get('f_img')?.value || [];
+        images[imageIndex] = imageUrl;
+        section.get('f_img')?.setValue(images);
+        
+        toast.success('Imagen subida correctamente');
+      }
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+      toast.error('Error al subir la imagen');
+    }
+  }
+
   updateImageValue(sectionIndex: number, imageIndex: number, event: any): void {
+    // Este método ya no se usa, pero lo mantenemos por compatibilidad
     const section = this.sections.at(sectionIndex);
     const currentImages = section.get('f_img')?.value || [];
     currentImages[imageIndex] = event.target.value;
@@ -158,35 +216,122 @@ export class BlogFormComponent implements OnInit {
     return index === 0 ? 'f' : 's';
   }
 
-  onSubmit(): void {
-    if (this.blogForm.valid) {
-      this.isLoading = true;
-      const formData = this.blogForm.value as CreateBlogPostRequest;
+  onMainImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        toast.error('Por favor, selecciona un archivo de imagen válido');
+        return;
+      }
 
-      if (this.isEditMode && this.blogPostId) {
-        // Actualizar post existente
-        this.blogService.updateBlogPost(this.blogPostId, formData).subscribe({
-          next: () => {
-            toast.success('Post actualizado exitosamente!');
-            this.router.navigate(['/layout/vzor-cms/blog']);
-          },
-          error: (error: any) => {
-            this.handleRequestError(error);
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('La imagen debe ser menor a 5MB');
+        return;
+      }
+
+      this.selectedMainImage = file;
+      
+      // Crear preview
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.mainImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeMainImage(): void {
+    this.selectedMainImage = null;
+    this.mainImagePreview = null;
+  }
+
+  async uploadMainImage(): Promise<string | null> {
+    if (!this.selectedMainImage) return null;
+
+    this.isUploadingMainImage = true;
+    const fileName = this.storageService.generateFileName(this.selectedMainImage.name);
+    
+    try {
+      // Usar el ID del blog si existe, o generar uno temporal
+      const blogId = this.blogPostId || this.generateTempId();
+      const path = `blog/${blogId}/main/${fileName}`;
+      
+      const imageUrl = await this.storageService.uploadImage(this.selectedMainImage, path).toPromise();
+      this.isUploadingMainImage = false;
+      return imageUrl || null;
+    } catch (error) {
+      this.isUploadingMainImage = false;
+      toast.error('Error al subir la imagen');
+      console.error(error);
+      return null;
+    }
+  }
+
+  private generateTempId(): string {
+    return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.blogForm.valid) {
+      // Validar que haya una imagen (nueva o existente)
+      if (!this.selectedMainImage && !this.mainImagePreview) {
+        toast.error('Por favor, selecciona una imagen principal para el post');
+        return;
+      }
+
+      this.isLoading = true;
+      
+      try {
+        let mainImageUrl: string | undefined = undefined;
+        
+        // Si hay una imagen nueva seleccionada, subirla
+        if (this.selectedMainImage) {
+          const uploadedUrl = await this.uploadMainImage();
+          if (!uploadedUrl) {
             this.isLoading = false;
+            return;
           }
-        });
-      } else {
-        // Crear nuevo post
-        this.blogService.createBlogPost(formData).subscribe({
-          next: () => {
-            toast.success('Post creado exitosamente!');
-            this.router.navigate(['/layout/vzor-cms/blog']);
-          },
-          error: (error: any) => {
-            this.handleRequestError(error);
-            this.isLoading = false;
-          }
-        });
+          mainImageUrl = uploadedUrl;
+        } else if (this.mainImagePreview) {
+          // Si hay una imagen existente (modo edición), usar la existente
+          mainImageUrl = this.mainImagePreview;
+        }
+
+        const formData: CreateBlogPostRequest = {
+          ...this.blogForm.value,
+          mainImageUrl: mainImageUrl
+        };
+
+        if (this.isEditMode && this.blogPostId) {
+          // Actualizar post existente
+          this.blogService.updateBlogPost(this.blogPostId, formData).subscribe({
+            next: () => {
+              toast.success('Post actualizado exitosamente!');
+              this.router.navigate(['/layout/vzor-cms/blog']);
+            },
+            error: (error: any) => {
+              this.handleRequestError(error);
+              this.isLoading = false;
+            }
+          });
+        } else {
+          // Crear nuevo post
+          this.blogService.createBlogPost(formData).subscribe({
+            next: () => {
+              toast.success('Post creado exitosamente!');
+              this.router.navigate(['/layout/vzor-cms/blog']);
+            },
+            error: (error: any) => {
+              this.handleRequestError(error);
+              this.isLoading = false;
+            }
+          });
+        }
+      } catch (error) {
+        this.isLoading = false;
+        this.handleRequestError(error);
       }
     } else {
       this.blogForm.markAllAsTouched();

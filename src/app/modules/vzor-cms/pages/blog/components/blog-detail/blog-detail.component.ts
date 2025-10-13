@@ -24,7 +24,7 @@ export class BlogDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.blogService.getBlogPostById(parseInt(id)).subscribe({
+      this.blogService.getBlogPostById(id).subscribe({
         next: (post: BlogPost | undefined) => {
           this.blogPost = post;
         },
@@ -40,11 +40,33 @@ export class BlogDetailComponent implements OnInit {
     this.location.back();
   }
 
+  get hasSections(): boolean {
+    return !!(this.blogPost?.sections && this.blogPost.sections.length > 0);
+  }
+
   onImageError(event: any): void {
     event.target.src = 'assets/images/no_productos.png';
   }
 
-  get hasSections(): boolean {
-    return !!(this.blogPost?.sections && this.blogPost.sections.length > 0);
+  getFormattedDate(date: any): Date | null {
+    if (!date) return null;
+    
+    try {
+      if (date instanceof Date) {
+        return date;
+      } else if (date && typeof date === 'object' && date.toDate) {
+        // Firestore Timestamp
+        return date.toDate();
+      } else if (date && typeof date === 'object' && date.seconds) {
+        // Firestore Timestamp with seconds
+        return new Date(date.seconds * 1000);
+      } else if (typeof date === 'string' || typeof date === 'number') {
+        return new Date(date);
+      }
+      return null;
+    } catch (error) {
+      console.warn('Error converting date:', date, error);
+      return null;
+    }
   }
 }

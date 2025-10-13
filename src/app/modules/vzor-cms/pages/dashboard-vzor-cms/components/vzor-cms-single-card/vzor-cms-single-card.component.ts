@@ -17,7 +17,8 @@ export class VzorCmsSingleCardComponent {
 
   getImageUrl(): string {
     if (this.type === 'post') {
-      return 'assets/avatars/avt-02.jpg'; // Imagen por defecto para posts
+      const blogPost = this.content as BlogPost;
+      return blogPost.mainImageUrl || 'assets/avatars/avt-02.jpg'; // Usar imagen del post o fallback
     } else {
       return 'assets/avatars/avt-02.jpg'; // Imagen por defecto para recursos
     }
