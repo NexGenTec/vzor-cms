@@ -7,7 +7,7 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist/nex-manager/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
