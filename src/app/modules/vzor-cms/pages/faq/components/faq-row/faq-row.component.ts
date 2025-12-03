@@ -13,10 +13,15 @@ import { FAQ } from '../../../../models/faq.model';
 export class FAQRowComponent {
     @Input() faq!: FAQ;
     @Output() editFAQ = new EventEmitter<FAQ>();
-    @Output() deleteFAQ = new EventEmitter<number>();
+    @Output() deleteFAQ = new EventEmitter<string>();
+    @Output() viewFAQ = new EventEmitter<FAQ>();
 
     onEdit(): void {
         this.editFAQ.emit(this.faq);
+    }
+
+    onView(): void {
+        this.viewFAQ.emit(this.faq);
     }
 
     onDelete(): void {

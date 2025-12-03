@@ -16,7 +16,7 @@ import { FAQ, CreateFAQRequest } from '../../../../models/faq.model';
 export class FAQFormComponent implements OnInit {
     faqForm!: FormGroup;
     isEditMode = false;
-    faqId: number | null = null;
+    faqId: string | null = null;
     isLoading = false;
 
     categories = ['General', 'Técnico', 'Productos', 'Servicios', 'Soporte'];
@@ -45,7 +45,7 @@ export class FAQFormComponent implements OnInit {
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.isEditMode = true;
-            this.faqId = Number(id);
+            this.faqId = id;
             this.loadFAQ();
         }
     }

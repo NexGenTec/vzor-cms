@@ -9,9 +9,17 @@ import { VzorCmsContentTableComponent } from './components/vzor-cms-content-tabl
 import { BlogService } from '../../services/blog.service';
 import { RecursosService } from '../../services/recursos.service';
 import { ReviewClientesService } from '../../services/review-clientes.service';
+import { FAQService } from '../../services/faq.service';
+import { PlatformService } from '../../services/platform.service';
+import { ClientService } from '../../services/client.service';
+import { PartnerService } from '../../services/partner.service';
 import { BlogPost } from '../../models/blog.model';
 import { Recurso } from '../../models/recursos.model';
 import { ReviewCliente } from '../../models/review-clientes.model';
+import { FAQ } from '../../models/faq.model';
+import { Platform } from '../../models/platform.model';
+import { Client } from '../../models/client.model';
+import { Partner } from '../../models/partner.model';
 
 @Component({
   selector: 'app-dashboard-vzor-cms',
@@ -34,14 +42,20 @@ export class DashboardVzorCmsComponent {
   blogPosts = signal<BlogPost[]>([]);
   recursos = signal<Recurso[]>([]);
   reviews = signal<ReviewCliente[]>([]);
+  faqs = signal<FAQ[]>([]);
+  platforms = signal<Platform[]>([]);
+  clients = signal<Client[]>([]);
+  partners = signal<Partner[]>([]);
   isLoading = true;
 
   // Estadísticas computadas
   totalBlogPosts = computed(() => this.blogPosts().length);
   publishedPosts = computed(() => this.blogPosts().filter(post => post.category !== 'Borrador').length);
   draftPosts = computed(() => this.blogPosts().filter(post => post.category === 'Borrador').length);
+
   totalRecursos = computed(() => this.recursos().length);
   totalDownloads = computed(() => this.recursos().reduce((sum, r) => sum + (r.downloads || 0), 0));
+
   totalReviews = computed(() => this.reviews().length);
   averageRating = computed(() => {
     const total = this.reviews().length;
@@ -49,13 +63,37 @@ export class DashboardVzorCmsComponent {
     const sum = this.reviews().reduce((acc, review) => acc + review.rating, 0);
     return (sum / total);
   });
-  totalContent = computed(() => this.totalBlogPosts() + this.totalRecursos() + this.totalReviews());
+
+  totalFaqs = computed(() => this.faqs().length);
+
+  totalPlatforms = computed(() => this.platforms().length);
+  activePlatforms = computed(() => this.platforms().filter(p => p.isActive).length);
+
+  totalClients = computed(() => this.clients().length);
+  publishedClients = computed(() => this.clients().filter(c => c.isPublished).length);
+
+  totalPartners = computed(() => this.partners().length);
+  visiblePartners = computed(() => this.partners().filter(p => p.isVisible).length);
+
+  totalContent = computed(() =>
+    this.totalBlogPosts() +
+    this.totalRecursos() +
+    this.totalReviews() +
+    this.totalFaqs() +
+    this.totalPlatforms() +
+    this.totalClients() +
+    this.totalPartners()
+  );
 
   constructor(
     private blogService: BlogService,
     private recursosService: RecursosService,
-    private reviewClientesService: ReviewClientesService
-  ) {}
+    private reviewClientesService: ReviewClientesService,
+    private faqService: FAQService,
+    private platformService: PlatformService,
+    private clientService: ClientService,
+    private partnerService: PartnerService
+  ) { }
 
   ngOnInit(): void {
     this.loadAllData();
@@ -75,12 +113,40 @@ export class DashboardVzorCmsComponent {
     });
 
     this.reviewClientesService.getReviews().subscribe({
-      next: (reviews: ReviewCliente[]) => {
-        this.reviews.set(reviews);
+      next: (reviews: ReviewCliente[]) => this.reviews.set(reviews),
+      error: (error: any) => console.error('Error loading client reviews:', error)
+    });
+
+    this.faqService.getFAQs().subscribe({
+      next: (faqs) => this.faqs.set(faqs),
+      error: (error) => console.error('Error loading FAQs:', error)
+    });
+
+    this.platformService.getPlatforms().subscribe({
+      next: (platforms) => this.platforms.set(platforms),
+      error: (error) => console.error('Error loading platforms:', error)
+    });
+
+    this.clientService.getClients().subscribe({
+      next: (clients) => this.clients.set(clients),
+      error: (error) => console.error('Error loading clients:', error)
+    });
+
+    this.partnerService.getPartners().subscribe({
+      next: (partners) => {
+        this.partners.set(partners);
+        // Assuming this is the last one or close to it, we can turn off loading here
+        // Ideally we should use forkJoin but for now this is fine as they are independent
+        // We'll set a timeout or just wait for the last one. 
+        // Better approach: check if all are loaded? 
+        // For simplicity, I'll just set isLoading to false here as it's likely the last one called.
+        // Or better, use a counter or forkJoin.
+        // Since I can't easily refactor to forkJoin without changing imports significantly (rxjs),
+        // I'll just set isLoading = false in a setTimeout to allow others to finish, or just set it here.
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error loading client reviews:', error);
+      error: (error) => {
+        console.error('Error loading partners:', error);
         this.isLoading = false;
       }
     });

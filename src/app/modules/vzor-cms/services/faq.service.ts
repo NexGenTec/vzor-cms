@@ -19,7 +19,7 @@ export class FAQService {
                     const data = doc.data() as any;
                     return {
                         ...data,
-                        id: +doc.id,
+                        id: doc.id,
                         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
                         updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
                     } as FAQ;
@@ -33,15 +33,15 @@ export class FAQService {
         });
     }
 
-    getFAQById(id: number): Observable<FAQ | undefined> {
-        const faqDoc = doc(this.firestore, this.collection, id.toString());
+    getFAQById(id: string): Observable<FAQ | undefined> {
+        const faqDoc = doc(this.firestore, this.collection, id);
         return new Observable(observer => {
             const unsubscribe = onSnapshot(faqDoc, (docSnapshot) => {
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data() as any;
                     observer.next({
                         ...data,
-                        id: +docSnapshot.id,
+                        id: docSnapshot.id,
                         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
                         updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
                     } as FAQ);
@@ -67,16 +67,16 @@ export class FAQService {
         return from(addDoc(faqsCollection, newFAQ).then(() => { }));
     }
 
-    updateFAQ(id: number, faqData: UpdateFAQRequest): Observable<void> {
-        const faqDoc = doc(this.firestore, this.collection, id.toString());
+    updateFAQ(id: string, faqData: UpdateFAQRequest): Observable<void> {
+        const faqDoc = doc(this.firestore, this.collection, id);
         return from(updateDoc(faqDoc, {
             ...faqData,
             updatedAt: new Date()
         }));
     }
 
-    deleteFAQ(id: number): Observable<void> {
-        const faqDoc = doc(this.firestore, this.collection, id.toString());
+    deleteFAQ(id: string): Observable<void> {
+        const faqDoc = doc(this.firestore, this.collection, id);
         return from(deleteDoc(faqDoc));
     }
 }

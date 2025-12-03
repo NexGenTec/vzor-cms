@@ -13,6 +13,16 @@ import { RecursosFormComponent } from './pages/recursos/components/recursos-form
 import { RecursosDetailComponent } from './pages/recursos/components/recursos-detail/recursos-detail.component';
 import { FAQComponent } from './pages/faq/faq.component';
 import { FAQFormComponent } from './pages/faq/components/faq-form/faq-form.component';
+import { PlatformsComponent } from './pages/platforms/platforms.component';
+import { PlatformFormComponent } from './pages/platforms/components/platform-form/platform-form.component';
+import { ClientsComponent } from './pages/clients/clients.component';
+import { ClientFormComponent } from './pages/clients/components/client-form/client-form.component';
+import { ClientDetailComponent } from './pages/clients/components/client-detail/client-detail.component';
+import { PartnersComponent } from './pages/partners/partners.component';
+import { PartnerFormComponent } from './pages/partners/components/partner-form/partner-form.component';
+import { PartnerDetailComponent } from './pages/partners/components/partner-detail/partner-detail.component';
+import { FaqDetailComponent } from './pages/faq/components/faq-detail/faq-detail.component';
+import { PlatformDetailComponent } from './pages/platforms/components/platform-detail/platform-detail.component';
 
 const routes: Routes = [
   {
@@ -33,6 +43,19 @@ const routes: Routes = [
       { path: 'faq', component: FAQComponent },
       { path: 'faq/new', component: FAQFormComponent },
       { path: 'faq/edit/:id', component: FAQFormComponent },
+      { path: 'faq/:id', component: FaqDetailComponent },
+      { path: 'platforms', component: PlatformsComponent },
+      { path: 'platforms/new', component: PlatformFormComponent },
+      { path: 'platforms/edit/:id', component: PlatformFormComponent },
+      { path: 'platforms/:id', component: PlatformDetailComponent },
+      { path: 'clients', component: ClientsComponent },
+      { path: 'clients/new', component: ClientFormComponent },
+      { path: 'clients/edit/:id', component: ClientFormComponent },
+      { path: 'clients/:id', component: ClientDetailComponent },
+      { path: 'partners', component: PartnersComponent },
+      { path: 'partners/new', component: PartnerFormComponent },
+      { path: 'partners/edit/:id', component: PartnerFormComponent },
+      { path: 'partners/:id', component: PartnerDetailComponent },
       { path: 'review-clientes', component: ReviewClientesComponent },
       { path: 'review-clientes/:id', component: ReviewDetailComponent },
       { path: '**', redirectTo: 'errors/404' },

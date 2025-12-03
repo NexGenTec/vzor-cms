@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr class="hover:bg-card/50" *ngFor="let faq of pagedFAQs(); let i=index" app-faq-row [faq]="faq"
-                    (editFAQ)="openEditModal($event)" (deleteFAQ)="deleteFAQ($event)"></tr>
+                    (editFAQ)="openEditModal($event)" (viewFAQ)="viewFaq($event)" (deleteFAQ)="deleteFAQ($event)"></tr>
                 <tr *ngIf="filteredFAQs().length === 0">
                     <td class="py-4 text-center text-sm" colspan="8">No se encontraron FAQs</td>
                 </tr>

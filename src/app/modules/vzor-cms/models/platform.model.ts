@@ -8,7 +8,7 @@ export interface Solution {
 }
 
 export interface Platform {
-    id: number;
+    id: string;
     name: string;
     description: string;
     iconUrl: string;

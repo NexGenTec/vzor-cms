@@ -19,7 +19,7 @@ export class PlatformService {
                     const data = doc.data() as any;
                     return {
                         ...data,
-                        id: +doc.id,
+                        id: doc.id,
                         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
                         updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
                     } as Platform;
@@ -35,15 +35,15 @@ export class PlatformService {
         });
     }
 
-    getPlatformById(id: number): Observable<Platform | undefined> {
-        const platformDoc = doc(this.firestore, this.collection, id.toString());
+    getPlatformById(id: string): Observable<Platform | undefined> {
+        const platformDoc = doc(this.firestore, this.collection, id);
         return new Observable(observer => {
             const unsubscribe = onSnapshot(platformDoc, (docSnapshot) => {
                 if (docSnapshot.exists()) {
                     const data = docSnapshot.data() as any;
                     observer.next({
                         ...data,
-                        id: +docSnapshot.id,
+                        id: docSnapshot.id,
                         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
                         updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt)
                     } as Platform);
@@ -69,16 +69,16 @@ export class PlatformService {
         return from(addDoc(platformsCollection, newPlatform).then(() => { }));
     }
 
-    updatePlatform(id: number, platformData: UpdatePlatformRequest): Observable<void> {
-        const platformDoc = doc(this.firestore, this.collection, id.toString());
+    updatePlatform(id: string, platformData: UpdatePlatformRequest): Observable<void> {
+        const platformDoc = doc(this.firestore, this.collection, id);
         return from(updateDoc(platformDoc, {
             ...platformData,
             updatedAt: new Date()
         }));
     }
 
-    deletePlatform(id: number): Observable<void> {
-        const platformDoc = doc(this.firestore, this.collection, id.toString());
+    deletePlatform(id: string): Observable<void> {
+        const platformDoc = doc(this.firestore, this.collection, id);
         return from(deleteDoc(platformDoc));
     }
 }

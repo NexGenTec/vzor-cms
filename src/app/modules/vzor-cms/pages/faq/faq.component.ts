@@ -109,7 +109,11 @@ export class FAQComponent implements OnInit {
         this.router.navigate(['/layout/vzor-cms/faq/edit', faq.id]);
     }
 
-    deleteFAQ(id: number): void {
+    viewFaq(faq: FAQ): void {
+        this.router.navigate(['/layout/vzor-cms/faq', faq.id]);
+    }
+
+    deleteFAQ(id: string): void {
         this.faqService.deleteFAQ(id).subscribe({
             next: () => {
                 toast.success('FAQ eliminada exitosamente!');
