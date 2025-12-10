@@ -5,11 +5,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { Recurso } from '../../../../models/recursos.model';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
     selector: '[app-recursos-row]',
     standalone: true,
-    imports: [CommonModule, FormsModule, AngularSvgIconModule],
+    imports: [CommonModule, FormsModule, AngularSvgIconModule, ConfirmModalComponent],
     templateUrl: './recursos-row.component.html',
     styleUrl: './recursos-row.component.scss'
 })
@@ -18,6 +19,8 @@ export class RecursosRowComponent {
     @Output() editRecurso = new EventEmitter<Recurso>();
     @Output() deleteRecurso = new EventEmitter<number>();
 
+    showDeleteModal = false;
+
     constructor(private router: Router) { }
 
     onEdit(): void {
@@ -25,9 +28,16 @@ export class RecursosRowComponent {
     }
 
     onDelete(): void {
-        if (confirm('¿Estás seguro de que quieres eliminar este recurso?')) {
-            this.deleteRecurso.emit(this.recurso.id);
-        }
+        this.showDeleteModal = true;
+    }
+
+    confirmDelete(): void {
+        this.deleteRecurso.emit(this.recurso.id);
+        this.showDeleteModal = false;
+    }
+
+    cancelDelete(): void {
+        this.showDeleteModal = false;
     }
 
     viewRecurso(id: number): void {

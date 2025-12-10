@@ -106,7 +106,6 @@ export class Menu {
           children: [
             { label: 'Dashboard', route: '/layout/vzor-cms/dashboard' },
             { label: 'Blog y recursos', route: '/layout/vzor-cms/blog' },
-            { label: 'Recursos', route: '/layout/vzor-cms/recursos' },
             { label: 'FAQ', route: '/layout/vzor-cms/faq' },
             { label: 'Plataformas', route: '/layout/vzor-cms/platforms' },
             { label: 'Clientes', route: '/layout/vzor-cms/clients' },

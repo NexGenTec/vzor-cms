@@ -10,7 +10,7 @@ export class StorageService {
 
   // Subir imagen a Firebase Storage
   uploadImage(file: File, path: string): Observable<string> {
-    const storageRef = ref(this.storage, `blog-images/${path}`);
+    const storageRef = ref(this.storage, path);
     const uploadTask = uploadBytes(storageRef, file);
     
     return from(uploadTask.then(async (snapshot: any) => {

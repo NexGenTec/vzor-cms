@@ -119,3 +119,13 @@
         </button>
     </td>
 </ng-container>
+
+<app-confirm-modal 
+    [isOpen]="showDeleteModal"
+    title="Eliminar Recurso"
+    message="¿Estás seguro de que quieres eliminar este recurso? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+</app-confirm-modal>

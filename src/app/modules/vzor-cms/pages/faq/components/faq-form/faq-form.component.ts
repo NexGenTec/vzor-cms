@@ -33,6 +33,8 @@ export class FAQFormComponent implements OnInit {
 
     private initializeForm(): void {
         this.faqForm = this.fb.group({
+            title: ['', Validators.required],
+            subtitle: ['', Validators.required],
             question: ['', Validators.required],
             answer: ['', Validators.required],
             category: ['', Validators.required],
@@ -56,7 +58,16 @@ export class FAQFormComponent implements OnInit {
             this.faqService.getFAQById(this.faqId).subscribe({
                 next: (faq: FAQ | undefined) => {
                     if (faq) {
-                        this.faqForm.patchValue(faq);
+                        // Manejar valores por defecto para FAQs existentes sin título/subtítulo
+                        this.faqForm.patchValue({
+                            title: faq.title || '',
+                            subtitle: faq.subtitle || '',
+                            question: faq.question || '',
+                            answer: faq.answer || '',
+                            category: faq.category || '',
+                            order: faq.order || 0,
+                            isPublished: faq.isPublished || false
+                        });
                     }
                     this.isLoading = false;
                 },

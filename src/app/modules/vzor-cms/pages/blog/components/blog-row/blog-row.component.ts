@@ -5,11 +5,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { BlogPost } from '../../../../models/blog.model';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: '[app-blog-row]',
   standalone: true,
-  imports: [CommonModule, FormsModule, AngularSvgIconModule],
+  imports: [CommonModule, FormsModule, AngularSvgIconModule, ConfirmModalComponent],
   templateUrl: './blog-row.component.html',
   styleUrl: './blog-row.component.scss'
 })
@@ -19,6 +20,8 @@ export class BlogRowComponent {
   @Output() editPost = new EventEmitter<BlogPost>();
   @Output() deletePost = new EventEmitter<string>();
 
+  showDeleteModal = false;
+
   constructor(private router: Router) {}
 
   onEdit(): void {
@@ -26,9 +29,16 @@ export class BlogRowComponent {
   }
 
   onDelete(): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este post?')) {
-      this.deletePost.emit(this.blogPost.id);
-    }
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    this.deletePost.emit(this.blogPost.id);
+    this.showDeleteModal = false;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
   }
 
   viewPost(id: string): void {

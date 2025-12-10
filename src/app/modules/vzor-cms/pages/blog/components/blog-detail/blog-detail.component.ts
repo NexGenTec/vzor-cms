@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { BlogPost } from '../../../../models/blog.model';
 export class BlogDetailComponent implements OnInit {
   blogPost: BlogPost | undefined;
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private location = inject(Location);
   private blogService = inject(BlogService);
 
@@ -38,6 +39,12 @@ export class BlogDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  editPost(): void {
+    if (this.blogPost) {
+      this.router.navigate(['/layout/vzor-cms/blog/edit', this.blogPost.id]);
+    }
   }
 
   get hasSections(): boolean {

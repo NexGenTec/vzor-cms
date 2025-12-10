@@ -1,5 +1,7 @@
 export interface FAQ {
     id: string;
+    title: string;
+    subtitle: string;
     question: string;
     answer: string;
     category: string;
@@ -11,6 +13,8 @@ export interface FAQ {
 }
 
 export interface CreateFAQRequest {
+    title: string;
+    subtitle: string;
     question: string;
     answer: string;
     category: string;

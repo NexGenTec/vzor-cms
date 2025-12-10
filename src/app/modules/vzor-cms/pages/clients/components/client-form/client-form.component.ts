@@ -38,11 +38,11 @@ export class ClientFormComponent implements OnInit {
         this.clientForm = this.fb.group({
             name: ['', Validators.required],
             description: ['', Validators.required],
-            website: ['', Validators.required],
-            sector: ['', Validators.required],
+            website: [''],
+            sector: [''],
             logoUrl: [''],
-            order: [0, Validators.required],
-            isPublished: [true]
+            order: [0],
+            isPublished: [false]
         });
     }
 

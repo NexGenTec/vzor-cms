@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FAQ } from '../../../../models/faq.model';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
     selector: '[app-faq-row]',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, ConfirmModalComponent],
     templateUrl: './faq-row.component.html',
     styleUrl: './faq-row.component.scss'
 })
@@ -15,6 +16,8 @@ export class FAQRowComponent {
     @Output() editFAQ = new EventEmitter<FAQ>();
     @Output() deleteFAQ = new EventEmitter<string>();
     @Output() viewFAQ = new EventEmitter<FAQ>();
+
+    showDeleteModal = false;
 
     onEdit(): void {
         this.editFAQ.emit(this.faq);
@@ -25,9 +28,16 @@ export class FAQRowComponent {
     }
 
     onDelete(): void {
-        if (confirm('¿Estás seguro de que quieres eliminar esta FAQ?')) {
-            this.deleteFAQ.emit(this.faq.id);
-        }
+        this.showDeleteModal = true;
+    }
+
+    confirmDelete(): void {
+        this.deleteFAQ.emit(this.faq.id);
+        this.showDeleteModal = false;
+    }
+
+    cancelDelete(): void {
+        this.showDeleteModal = false;
     }
 
     getFormattedDate(date: any): Date | null {

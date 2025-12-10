@@ -52,4 +52,17 @@ export class FaqDetailComponent implements OnInit {
             this.router.navigate(['/layout/vzor-cms/faq/edit', this.faq.id]);
         }
     }
+
+    getFormattedDate(date: any): Date | null {
+        if (!date) return null;
+        try {
+            if (date instanceof Date) return date;
+            if (date && typeof date === 'object' && date.toDate) return date.toDate();
+            if (date && typeof date === 'object' && date.seconds) return new Date(date.seconds * 1000);
+            if (typeof date === 'string' || typeof date === 'number') return new Date(date);
+            return null;
+        } catch (error) {
+            return null;
+        }
+    }
 }
