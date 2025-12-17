@@ -23,6 +23,12 @@ import { PartnerFormComponent } from './pages/partners/components/partner-form/p
 import { PartnerDetailComponent } from './pages/partners/components/partner-detail/partner-detail.component';
 import { FaqDetailComponent } from './pages/faq/components/faq-detail/faq-detail.component';
 import { PlatformDetailComponent } from './pages/platforms/components/platform-detail/platform-detail.component';
+import { SolutionsComponent } from './pages/solutions/solutions.component';
+import { SolutionFormComponent } from './pages/solutions/components/solution-form/solution-form.component';
+import { SolutionDetailComponent } from './pages/solutions/components/solution-detail/solution-detail.component';
+import { SolutionTabsComponent } from './pages/solution-tabs/solution-tabs.component';
+import { SolutionTabFormComponent } from './pages/solution-tabs/components/solution-tab-form/solution-tab-form.component';
+import { SolutionTabDetailComponent } from './pages/solution-tabs/components/solution-tab-detail/solution-tab-detail.component';
 
 const routes: Routes = [
   {
@@ -48,6 +54,14 @@ const routes: Routes = [
       { path: 'platforms/new', component: PlatformFormComponent },
       { path: 'platforms/edit/:id', component: PlatformFormComponent },
       { path: 'platforms/:id', component: PlatformDetailComponent },
+      { path: 'solutions', component: SolutionsComponent },
+      { path: 'solutions/new', component: SolutionFormComponent },
+      { path: 'solutions/edit/:id', component: SolutionFormComponent },
+      { path: 'solutions/:id', component: SolutionDetailComponent },
+      { path: 'solution-tabs', component: SolutionTabsComponent },
+      { path: 'solution-tabs/new', component: SolutionTabFormComponent },
+      { path: 'solution-tabs/edit/:id', component: SolutionTabFormComponent },
+      { path: 'solution-tabs/:id', component: SolutionTabDetailComponent },
       { path: 'clients', component: ClientsComponent },
       { path: 'clients/new', component: ClientFormComponent },
       { path: 'clients/edit/:id', component: ClientFormComponent },

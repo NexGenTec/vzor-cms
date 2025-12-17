@@ -1,0 +1,116 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg relative">
+  <div class="flex justify-between items-center mb-6">
+    <button
+      (click)="goBack()"
+      class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M5 12l14 0" />
+        <path d="M5 12l6 6" />
+        <path d="M5 12l6 -6" />
+      </svg>
+    </button>
+
+    <button
+      (click)="editSolution()"
+      class="flex items-center px-4 py-2 rounded-lg text-white transition-colors"
+      style="background-color: #6EC1E4;">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+        </path>
+      </svg>
+      Editar Solución
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2" style="border-color: #6EC1E4;"></div>
+  </div>
+
+  <div *ngIf="!isLoading && solution" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Información principal -->
+    <div class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          {{ solution.name }}
+        </h1>
+        <p class="text-sm font-medium text-gray-500 mb-1">
+          {{ solution.sectionTitle }}
+        </p>
+        <p class="text-sm text-gray-500" *ngIf="solution.subtitle">
+          {{ solution.subtitle }}
+        </p>
+        <div class="mt-4">
+          <span
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+            [ngClass]="solution.isPublished ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+            {{ solution.isPublished ? 'Publicado' : 'Borrador' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 rounded-lg p-5">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Descripción corta</h3>
+        <p class="text-gray-700 leading-relaxed">
+          {{ solution.shortDescription }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="space-y-6">
+      <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de la solución</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-600">Nombre:</span>
+            <span class="text-sm font-medium text-gray-900">{{ solution.name }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-600">Título de sección:</span>
+            <span class="text-sm font-medium text-gray-900">{{ solution.sectionTitle }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100" *ngIf="solution.subtitle">
+            <span class="text-sm text-gray-600">Subtítulo:</span>
+            <span class="text-sm font-medium text-gray-900">{{ solution.subtitle }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100" *ngIf="solution.imgKey">
+            <span class="text-sm text-gray-600">Clave de imagen:</span>
+            <span class="text-sm font-medium text-gray-900">{{ solution.imgKey }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-600">Orden:</span>
+            <span class="text-sm font-medium text-gray-900">{{ solution.order || 0 }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-sm text-gray-600">Fecha de creación:</span>
+            <span class="text-sm font-medium text-gray-900">
+              {{ (getFormattedDate(solution.createdAt) | date: 'short') || 'Sin fecha' }}
+            </span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-sm text-gray-600">Última actualización:</span>
+            <span class="text-sm font-medium text-gray-900">
+              {{ (getFormattedDate(solution.updatedAt) | date: 'short') || 'Sin fecha' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

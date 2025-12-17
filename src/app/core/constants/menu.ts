@@ -108,6 +108,20 @@ export class Menu {
             { label: 'Blog y recursos', route: '/layout/vzor-cms/blog' },
             { label: 'FAQ', route: '/layout/vzor-cms/faq' },
             { label: 'Plataformas', route: '/layout/vzor-cms/platforms' },
+            {
+              label: 'Soluciones',
+              route: '/layout/vzor-cms/solutions',
+              children: [
+                {
+                  label: 'Listado Soluciones',
+                  route: '/layout/vzor-cms/solutions',
+                },
+                {
+                  label: 'Tabs Soluciones',
+                  route: '/layout/vzor-cms/solution-tabs',
+                },
+              ],
+            },
             { label: 'Clientes', route: '/layout/vzor-cms/clients' },
             { label: 'Socios', route: '/layout/vzor-cms/partners' },
             // { label: 'Review', route: '/layout/vzor-cms/review-clientes' },
