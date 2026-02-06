@@ -40,9 +40,3 @@ Para desplegar este proyecto, ejecuta:
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
 | Rich Black | ![#121212](https://via.placeholder.com/10/121212?text=+) #121212 |
-
-
-## Soporte
-
-
-![Logo](https://lh3.googleusercontent.com/a/ACg8ocJ1kC00P6IWGLLUMFnamSYZ_l402ptDozectaPc4QAC1yyLIJk=s576-c-no)
