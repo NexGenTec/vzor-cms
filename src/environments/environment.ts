@@ -6,11 +6,16 @@ export const environment = {
   production: false,
   firebaseConfig: {
     apiKey: "",
+    authDomain: "",
     projectId: "vzor-cms",
+    storageBucket: "",
+    messagingSenderId: "833531618499",
+    appId: "1:833531618499:web:d1e15f1c7b5510e84f6e76",
+    measurementId: "G-SJ0ZY3MQDJ"
   },
   firestoreConfig: {
     projectId: "vzor-cms",
-    databaseId: "(default)"
+    databaseId: "vzor-web"
   }
 };
 /*
