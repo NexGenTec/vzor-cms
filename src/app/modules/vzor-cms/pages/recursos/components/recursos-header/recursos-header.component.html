@@ -1,0 +1,23 @@
+<ng-container>
+    <!-- Columna para seleccionar filas -->
+    <th class="w-[50px] px-3 py-4 text-center">
+        <input (change)="onCheckChange($event)" class="checkbox checkbox-sm" data-datatable-check="true"
+            type="checkbox" />
+    </th>
+    <!-- Columna para el título del recurso -->
+    <th class="min-w-[250px] px-3 py-4 text-left">Título</th>
+    <!-- Columna para el tipo -->
+    <th class="min-w-[120px] px-3 py-4 text-left">Tipo</th>
+    <!-- Columna para la categoría -->
+    <th class="min-w-[150px] px-3 py-4 text-left">Categoría</th>
+    <!-- Columna para descargas -->
+    <th class="min-w-[100px] px-3 py-4 text-center">Descargas</th>
+    <!-- Columna para la fecha -->
+    <th class="min-w-[140px] px-3 py-4 text-left">Fecha Creación</th>
+    <!-- Columna para editar -->
+    <th class="w-[80px] px-3 py-4 text-center">Editar</th>
+    <!-- Columna para eliminar -->
+    <th class="w-[80px] px-3 py-4 text-center">Eliminar</th>
+    <!-- Columna para ver -->
+    <th class="w-[90px] px-3 py-4 text-center">Ver</th>
+</ng-container>

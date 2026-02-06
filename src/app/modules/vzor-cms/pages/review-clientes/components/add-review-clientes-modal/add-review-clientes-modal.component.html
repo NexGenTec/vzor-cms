@@ -1,0 +1,114 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    <button 
+      (click)="closeModal()" 
+      class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+      aria-label="Cerrar Modal"
+    >
+      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Formulario de Review Cliente -->
+    <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <!-- Nombre del Cliente -->
+        <div>
+          <label for="clientName" class="block text-sm font-semibold">Nombre del Cliente</label>
+          <input 
+            id="clientName"
+            formControlName="clientName"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el nombre del cliente"
+            aria-labelledby="clientName"
+          />
+          <div *ngIf="reviewForm.get('clientName')?.invalid && reviewForm.get('clientName')?.touched" class="text-red-500 text-sm">
+            El nombre del cliente es obligatorio.
+          </div>
+        </div>
+
+        <!-- Proyecto -->
+        <div>
+          <label for="project" class="block text-sm font-semibold">Proyecto</label>
+          <input 
+            id="project"
+            formControlName="project"
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el nombre del proyecto"
+          />
+          <div *ngIf="reviewForm.get('project')?.invalid && reviewForm.get('project')?.touched" class="text-red-500 text-sm">
+            El proyecto es obligatorio.
+          </div>
+        </div>
+
+        <!-- Calificación -->
+        <div>
+          <label for="rating" class="block text-sm font-semibold">Calificación</label>
+          <select 
+            id="rating"
+            formControlName="rating"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Seleccione una calificación</option>
+            <option value="1">1 Estrella</option>
+            <option value="2">2 Estrellas</option>
+            <option value="3">3 Estrellas</option>
+            <option value="4">4 Estrellas</option>
+            <option value="5">5 Estrellas</option>
+          </select>
+          <div *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched" class="text-red-500 text-sm">
+            La calificación es obligatoria.
+          </div>
+        </div>
+
+        <!-- Comentario -->
+        <div>
+          <label for="review" class="block text-sm font-semibold">Comentario</label>
+          <textarea 
+            id="review"
+            formControlName="review"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Ingrese el comentario del cliente"
+            rows="3"
+          ></textarea>
+          <div *ngIf="reviewForm.get('review')?.invalid && reviewForm.get('review')?.touched" class="text-red-500 text-sm">
+            El comentario es obligatorio.
+          </div>
+        </div>
+
+        <!-- Tipo de Proyecto -->
+        <div>
+          <label for="projectType" class="block text-sm font-semibold">Tipo de Proyecto</label>
+          <select 
+            id="projectType"
+            formControlName="projectType"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md"
+          >
+            <option value="">Seleccione un tipo</option>
+            <option value="Residencial">Residencial</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Industrial">Industrial</option>
+            <option value="Infraestructura">Infraestructura</option>
+          </select>
+          <div *ngIf="reviewForm.get('projectType')?.invalid && reviewForm.get('projectType')?.touched" class="text-red-500 text-sm">
+            El tipo de proyecto es obligatorio.
+          </div>
+        </div>
+
+        <!-- Botón de Agregar -->
+        <div class="flex justify-end">
+          <button 
+            type="submit" 
+            class="flex-none rounded-md px-4 py-2.5 text-xs font-semibold text-white hover:opacity-90 transition"
+            [style.background-color]="'#6EC1E4'"
+            [disabled]="reviewForm.invalid">
+            {{ isEditMode ? 'Actualizar' : 'Agregar' }}
+          </button>        
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

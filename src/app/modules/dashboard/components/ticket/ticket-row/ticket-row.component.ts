@@ -96,7 +96,7 @@ export class TicketRowComponent {
     📅 *Fecha:* _${ticket.fechaCreacion ? new Date(ticket.fechaCreacion).toLocaleDateString() : 'Sin fecha'}_  
     ━━━━━━━━━━━━━━━━━━  
     📢 _Por favor, revise y atienda este ticket lo antes posible._  
-    💻 *Enviado desde la plataforma NexGen*`;
+    💻 *Enviado desde la plataforma vzor-cms*`;
   
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;

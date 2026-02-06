@@ -1,0 +1,99 @@
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg relative">
+    <div class="flex justify-between items-center mb-6">
+        <button (click)="goBack()"
+            class="flex h-7 w-7 items-center justify-center rounded-md text-red-500 hover:bg-card hover:text-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l14 0" />
+                <path d="M5 12l6 6" />
+                <path d="M5 12l6 -6" />
+            </svg>
+        </button>
+
+        <button (click)="editRecurso()" class="flex items-center px-4 py-2 rounded-lg text-white transition-colors"
+            style="background-color: #6EC1E4;">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+            </svg>
+            Editar Recurso
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Información principal -->
+        <div class="space-y-6">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ recurso?.title }}</h1>
+                <div class="flex justify-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" [ngClass]="{
+                        'bg-blue-100 text-blue-800': recurso?.category === 'Documentación',
+                        'bg-green-100 text-green-800': recurso?.category === 'Formación',
+                        'bg-yellow-100 text-yellow-800': recurso?.category === 'Marketing',
+                        'bg-purple-100 text-purple-800': recurso?.category === 'Técnico'
+                    }">
+                        {{ recurso?.category || 'Sin categoría' }}
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                        {{ recurso?.type }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-5">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">Descripción</h3>
+                <p class="text-gray-700 leading-relaxed">{{ recurso?.description || 'Sin descripción disponible' }}</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-600 mb-1">Tipo</h4>
+                    <p class="text-lg font-bold text-gray-900">{{ recurso?.type }}</p>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-600 mb-1">Descargas</h4>
+                    <p class="text-lg font-bold text-gray-900">{{ recurso?.downloads || 0 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="space-y-6">
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Información del Recurso</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-600">Título:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ recurso?.title }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-600">Tipo:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ recurso?.type }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-600">Categoría:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ recurso?.category }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-600">Fecha de creación:</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ getFormattedDate(recurso?.createdAt) | date:'short' || 'Sin fecha' }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-sm text-gray-600">Última actualización:</span>
+                        <span class="text-sm font-medium text-gray-900">
+                            {{ getFormattedDate(recurso?.updatedAt) | date:'short' || 'Sin fecha' }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-gray-600">Descargas:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ recurso?.downloads || 0 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

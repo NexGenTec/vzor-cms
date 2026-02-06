@@ -1,9 +1,42 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Reglas generales para todas las bases de datos
     match /{document=**} {
-      allow read, write: if true;
+      // Permitir lectura y escritura solo a usuarios autenticados
+      allow read, write: if request.auth != null;
+    }
+    
+    // Reglas específicas para la colección Users
+    match /Users/{userId} {
+      // Los usuarios pueden leer y escribir sus propios datos
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Permitir creación de nuevos usuarios durante el registro
+      allow create: if request.auth != null;
+      
+      // Los administradores pueden leer todos los usuarios
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/Users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.Roles != null &&
+        'Admin' in get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.Roles;
+    }
+    
+    // Reglas para otras colecciones (ajustar según necesidades)
+    match /Projects/{projectId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /Tasks/{taskId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /Products/{productId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /Tickets/{ticketId} {
+      allow read, write: if request.auth != null;
     }
   }
 }

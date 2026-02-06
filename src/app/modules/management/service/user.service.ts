@@ -1,28 +1,72 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Observable, finalize, map, switchMap } from 'rxjs';
+import { Firestore, collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, getDocs } from '@angular/fire/firestore';
+import { Observable, finalize, map, switchMap, from } from 'rxjs';
 import { User } from '../models/user';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Roles } from '../../auth/models/Roles.model';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Auth, signOut, onAuthStateChanged } from '@angular/fire/auth';
 import { of } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private collectionName = 'Users';
-  private readonly adminEmail = 'nexgentechnologies2024@gmail.com';
+  private readonly adminEmail = 'vzor-cms';
 
   constructor(
-    private firestore: AngularFirestore,
-    private storage: AngularFireStorage,
-    private auth: AngularFireAuth) {}
+    private firestore: Firestore,
+    private storage: Storage,
+    private auth: Auth) {
+    
+    // Console para verificar qué base de datos está usando Firestore
+    console.log('🔍 UserService - Firestore config:', {
+      firestore: this.firestore,
+      collectionName: this.collectionName
+    });
+    
+    // Mostrar información de la base de datos
+    this.showDatabaseInfo();
+    
+    // Test database connection
+    this.testDatabaseConnection();
+  }
 
-    createUser(uid: string, email: string, name: string = '', image: string): Promise<void> {
+  private showDatabaseInfo(): void {
+    console.log('🔍 DATABASE CONNECTION INFO:');
+    console.log('📊 Project ID:', environment.firebaseConfig.projectId);
+    console.log('🗄️ Database ID:', environment.firestoreConfig.databaseId);
+    console.log('🔗 Full Path:', `projects/${environment.firebaseConfig.projectId}/databases/${environment.firestoreConfig.databaseId}`);
+    console.log('🌍 Environment Config:', {
+      projectId: environment.firebaseConfig.projectId,
+      databaseId: environment.firestoreConfig.databaseId
+    });
+  }
+
+  private testDatabaseConnection(): void {
+    console.log('🧪 Testing database connection...');
+    
+    const testDoc = doc(this.firestore, 'test', 'connection');
+    getDoc(testDoc).then((docSnapshot) => {
+      console.log('✅ Database connection successful:', docSnapshot.exists() ? 'Document exists' : 'Document does not exist');
+      console.log('📍 Connected to database:', `projects/${environment.firebaseConfig.projectId}/databases/${environment.firestoreConfig.databaseId}`);
+    }).catch((error) => {
+      console.error('❌ Database connection failed:', error);
+      console.error('Error details:', {
+        code: error.code,
+        message: error.message,
+        stack: error.stack
+      });
+      console.log('📍 Attempted connection to:', `projects/${environment.firebaseConfig.projectId}/databases/${environment.firestoreConfig.databaseId}`);
+    });
+  }
+
+  async createUser(uid: string, email: string, name: string = '', image: string): Promise<void> {
     const role = email === this.adminEmail ? Roles.Admin : Roles.User;
-
-    return this.firestore.collection(this.collectionName).doc(uid).set({
+    const userDoc = doc(this.firestore, this.collectionName, uid);
+    
+    return setDoc(userDoc, {
       name: name,
       email: email,
       uid: uid,
@@ -34,64 +78,98 @@ export class UserService {
 
 
   getUserData(uid: string): Observable<User> {
-    return this.firestore.collection(this.collectionName).doc(uid).valueChanges() as Observable<User>;
+    if (!uid) {
+      return new Observable(observer => {
+        observer.next(null as any);
+        observer.complete();
+      });
+    }
+    
+    const userDoc = doc(this.firestore, this.collectionName, uid);
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(userDoc, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          observer.next(docSnapshot.data() as User);
+        } else {
+          observer.next(null as any);
+        }
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
-
   getAllUsers(): Observable<User[]> {
-    return this.firestore.collection<User>(this.collectionName).valueChanges().pipe(
-      map(users => users.map(user => ({
-        ...user,
-        createdAt: typeof user.createdAt === 'number' ? new Date(user.createdAt * 1000) : new Date()
-      })))
-    );
+    const usersCollection = collection(this.firestore, this.collectionName);
+    return new Observable(observer => {
+      const unsubscribe = onSnapshot(usersCollection, (querySnapshot) => {
+        const users = querySnapshot.docs.map(doc => ({
+          ...doc.data(),
+          createdAt: typeof doc.data()['createdAt'] === 'number' ? new Date(doc.data()['createdAt'] * 1000) : new Date()
+        })) as User[];
+        observer.next(users);
+      }, (error) => {
+        observer.error(error);
+      });
+      
+      return () => unsubscribe();
+    });
   }
 
 
   uploadImage(file: File, uid: string, name: string): Observable<string> {
     const filePath = `users/${uid}/${name}.jpg`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
-  
-    return task.snapshotChanges().pipe(
+    const fileRef = ref(this.storage, filePath);
+    
+    return from(uploadBytes(fileRef, file)).pipe(
+      switchMap(() => from(getDownloadURL(fileRef))),
       finalize(() => {
-        fileRef.getDownloadURL().subscribe(
-          (url) => {
-            console.log('Imagen cargada correctamente: ', url);
-          },
-          (error) => {
-            console.error('Error al obtener la URL de la imagen: ', error);
-          }
-        );
-      }),
-      switchMap(() => fileRef.getDownloadURL()),
-    );
-  }
-
-  updateSelectedStatus(uid: string, status: boolean): Promise<void> {
-    return this.firestore.collection(this.collectionName).doc(uid).update({ status });
-  }
-  
-  listenAuthState(): Observable<User | null> {
-    return this.auth.authState.pipe(
-      switchMap((user): Observable<User | null> => {
-        if (user) {
-          this.updateSelectedStatus(user.uid, true);
-          return this.getUserData(user.uid);
-        } else {
-          return of(null);
-        }
+        console.log('Imagen cargada correctamente');
       })
     );
   }
 
+  async updateSelectedStatus(uid: string, status: boolean): Promise<void> {
+    const userDoc = doc(this.firestore, this.collectionName, uid);
+    return updateDoc(userDoc, { status });
+  }
+  
+  listenAuthState(): Observable<User | null> {
+    return new Observable(observer => {
+      const unsubscribe = onAuthStateChanged(this.auth, async (user) => {
+        if (user) {
+          await this.updateSelectedStatus(user.uid, true);
+          // Obtener datos del usuario directamente
+          const userDoc = doc(this.firestore, this.collectionName, user.uid);
+          const userSnapshot = await getDoc(userDoc);
+          if (userSnapshot.exists()) {
+            observer.next(userSnapshot.data() as User);
+          } else {
+            observer.next(null);
+          }
+        } else {
+          observer.next(null);
+        }
+      });
+      
+      return () => unsubscribe();
+    });
+  }
 
   async logout(): Promise<void> {
-    const user = await this.auth.currentUser;
+    const user = this.auth.currentUser;
     if (user) {
       await this.updateSelectedStatus(user.uid, false);
     }
-    await this.auth.signOut();
+    await signOut(this.auth);
+  }
+
+  // Método para verificar a qué base de datos se está conectando
+  getCurrentDatabaseInfo(): void {
+    this.showDatabaseInfo();
+    this.testDatabaseConnection();
   }
   
 }

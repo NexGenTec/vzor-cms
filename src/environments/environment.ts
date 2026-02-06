@@ -4,6 +4,19 @@
 
 export const environment = {
   production: false,
+  firebaseConfig: {
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
+  },
+  firestoreConfig: {
+    projectId: "vzor-cms",
+    databaseId: ""
+  }
 };
 
 /*

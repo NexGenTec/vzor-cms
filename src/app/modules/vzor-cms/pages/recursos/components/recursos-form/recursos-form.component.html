@@ -1,0 +1,172 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button (click)="goBack()"
+                        class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {{ isEditMode ? 'Editar Recurso' : 'Crear Nuevo Recurso' }}
+                        </h1>
+                        <p class="text-sm text-gray-600">
+                            {{ isEditMode ? 'Modifica la información del recurso' : 'Completa la información para crear
+                            un nuevo recurso' }}
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="button" (click)="goBack()"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="button" (click)="onSubmit()" [disabled]="recursoForm.invalid || isLoading"
+                        class="px-6 py-2 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="background-color: #6EC1E4;">
+                        <span *ngIf="isLoading" class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Guardando...
+                        </span>
+                        <span *ngIf="!isLoading">
+                            {{ isEditMode ? 'Actualizar' : 'Crear Recurso' }}
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <form [formGroup]="recursoForm" (ngSubmit)="onSubmit()" class="p-6">
+                <div class="space-y-6">
+                    <!-- Título -->
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                            Título del Recurso <span class="text-red-500">*</span>
+                        </label>
+                        <input id="title" formControlName="title" type="text"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Ingrese el título del recurso" />
+                        <div *ngIf="recursoForm.get('title')?.invalid && recursoForm.get('title')?.touched"
+                            class="mt-1 text-sm text-red-600">
+                            El título es obligatorio.
+                        </div>
+                    </div>
+
+                    <!-- Grid para tipo y categoría -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Tipo -->
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+                                Tipo <span class="text-red-500">*</span>
+                            </label>
+                            <select id="type" formControlName="type"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Seleccione un tipo</option>
+                                <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+                            </select>
+                            <div *ngIf="recursoForm.get('type')?.invalid && recursoForm.get('type')?.touched"
+                                class="mt-1 text-sm text-red-600">
+                                El tipo es obligatorio.
+                            </div>
+                        </div>
+
+                        <!-- Categoría -->
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                Categoría <span class="text-red-500">*</span>
+                            </label>
+                            <select id="category" formControlName="category"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Seleccione una categoría</option>
+                                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                            </select>
+                            <div *ngIf="recursoForm.get('category')?.invalid && recursoForm.get('category')?.touched"
+                                class="mt-1 text-sm text-red-600">
+                                La categoría es obligatoria.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                            Descripción <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="description" formControlName="description"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Ingrese una descripción del recurso" rows="4"></textarea>
+                        <div *ngIf="recursoForm.get('description')?.invalid && recursoForm.get('description')?.touched"
+                            class="mt-1 text-sm text-red-600">
+                            La descripción es obligatoria.
+                        </div>
+                    </div>
+
+                    <!-- Archivo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Archivo del Recurso
+                        </label>
+                        <p class="text-sm text-gray-500 mb-3">
+                            Sube el archivo correspondiente al recurso (documento, imagen o video)
+                        </p>
+
+                        <!-- Preview -->
+                        <div *ngIf="filePreview" class="mb-4">
+                            <div
+                                class="p-3 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    <span class="text-sm text-gray-700">{{ filePreview }}</span>
+                                </div>
+                                <button type="button" (click)="removeFile()"
+                                    class="text-red-600 hover:text-red-700 text-sm font-medium">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Input de archivo -->
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="fileInput" (change)="onFileSelected($event)" class="hidden"
+                                #fileInput>
+
+                            <button type="button" (click)="fileInput.click()"
+                                [disabled]="isUploadingFile || !recursoForm.get('type')?.value"
+                                class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                {{ isUploadingFile ? 'Subiendo...' : 'Subir Archivo' }}
+                            </button>
+
+                            <span class="text-sm text-gray-500">
+                                {{ recursoForm.get('type')?.value === 'Video' ? 'Máximo 10MB' : 'Máximo 5MB' }}
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2" *ngIf="!recursoForm.get('type')?.value">
+                            Primero selecciona el tipo de recurso
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

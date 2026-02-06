@@ -1,0 +1,31 @@
+<div class="flex items-center justify-between p-4">
+  <div class="flex items-center space-x-4">
+    <div class="relative">
+      <input 
+        type="text" 
+        placeholder="Buscar posts..." 
+        class="w-64 rounded-md border border-muted/20 bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        (input)="onSearchChange($event)">
+    </div>
+    <select 
+      class="rounded-md border border-muted/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+      (change)="onCategoryChange($event)">
+      <option value="Todas">Todas las categorías</option>
+      <option value="Sostenibilidad">Sostenibilidad</option>
+      <option value="Gestión">Gestión</option>
+      <option value="Tecnología">Tecnología</option>
+      <option value="Seguridad">Seguridad</option>
+      <option value="Noticias">Noticias</option>
+    </select>
+    <select 
+      class="rounded-md border border-muted/20 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+      (change)="onStatusChange($event)">
+      <option value="Todas">Todos los estados</option>
+      <option value="published">Publicado</option>
+      <option value="draft">Borrador</option>
+    </select>
+  </div>
+  <div class="text-sm text-muted-foreground">
+    Mostrando {{ totalPosts }} posts
+  </div>
+</div>

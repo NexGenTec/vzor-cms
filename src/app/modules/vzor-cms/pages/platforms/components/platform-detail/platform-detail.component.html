@@ -1,0 +1,125 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button (click)="goBack()"
+                        class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Detalle de Plataforma</h1>
+                        <p class="text-sm text-gray-600">Información detallada de la plataforma y sus soluciones</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button (click)="editPlatform()"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 00 2 2h11a2 2 0 00 2-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Editar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+
+        <div *ngIf="!isLoading && platform" class="space-y-6">
+            <!-- Main Info Card -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
+                            <svg-icon *ngIf="platform.iconUrl" [src]="platform.iconUrl"
+                                [svgStyle]="{ 'width.px': 32, 'height.px': 32 }" class="text-gray-600"></svg-icon>
+                            <svg *ngIf="!platform.iconUrl" class="w-8 h-8 text-gray-400" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">{{ platform.name }}</h2>
+                            <p class="text-gray-500">{{ platform.description }}</p>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                        [ngClass]="platform.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                        {{ platform.isActive ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Orden</h3>
+                        <p class="text-gray-900">{{ platform.order }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Última Actualización
+                        </h3>
+                        <p class="text-gray-900">{{ platform.updatedAt | date:'medium' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solutions List -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-medium text-gray-900">Soluciones ({{ platform.solutions.length }})</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <div *ngFor="let solution of platform.solutions" class="p-6">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center overflow-hidden border border-blue-100 flex-shrink-0">
+                                <svg-icon *ngIf="solution.iconUrl" [src]="solution.iconUrl"
+                                    [svgStyle]="{ 'width.px': 24, 'height.px': 24 }" class="text-blue-600"></svg-icon>
+                                <svg *ngIf="!solution.iconUrl" class="w-6 h-6 text-blue-400" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-gray-900">{{ solution.title }}</h4>
+                                <p class="text-gray-600 mt-1">{{ solution.description }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Features -->
+                        <div *ngIf="solution.features && solution.features.length > 0" class="ml-16">
+                            <h5 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-2">Características
+                            </h5>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <li *ngFor="let feature of solution.features"
+                                    class="flex items-center text-sm text-gray-700">
+                                    <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    {{ feature }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div *ngIf="platform.solutions.length === 0" class="p-6 text-center text-gray-500">
+                        No hay soluciones registradas para esta plataforma.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

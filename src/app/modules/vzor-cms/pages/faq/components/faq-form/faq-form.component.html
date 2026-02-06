@@ -1,0 +1,147 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button (click)="goBack()"
+                        class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            {{ isEditMode ? 'Editar FAQ' : 'Crear Nueva FAQ' }}
+                        </h1>
+                        <p class="text-sm text-gray-600">
+                            {{ isEditMode ? 'Modifica la información del FAQ' : 'Completa la información para crear un
+                            nuevo FAQ' }}
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="button" (click)="goBack()"
+                        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="button" (click)="onSubmit()" [disabled]="faqForm.invalid || isLoading"
+                        class="px-6 py-2 text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="background-color: #6EC1E4;">
+                        <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar' : 'Crear FAQ' }}</span>
+                        <span *ngIf="isLoading">Guardando...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <form [formGroup]="faqForm" (ngSubmit)="onSubmit()" class="p-6">
+                <div class="space-y-6">
+                    <!-- Título y Subtítulo -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                                Título <span class="text-red-500">*</span>
+                            </label>
+                            <input id="title" formControlName="title" type="text"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Ingrese el título del FAQ" />
+                            <div *ngIf="faqForm.get('title')?.invalid && faqForm.get('title')?.touched"
+                                class="mt-1 text-sm text-red-600">
+                                El título es obligatorio.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="subtitle" class="block text-sm font-medium text-gray-700 mb-2">
+                                Subtítulo <span class="text-red-500">*</span>
+                            </label>
+                            <input id="subtitle" formControlName="subtitle" type="text"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Ingrese el subtítulo del FAQ" />
+                            <div *ngIf="faqForm.get('subtitle')?.invalid && faqForm.get('subtitle')?.touched"
+                                class="mt-1 text-sm text-red-600">
+                                El subtítulo es obligatorio.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta -->
+                    <div>
+                        <label for="question" class="block text-sm font-medium text-gray-700 mb-2">
+                            Pregunta <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="question" formControlName="question"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Ingrese la pregunta frecuente" rows="3"></textarea>
+                        <div *ngIf="faqForm.get('question')?.invalid && faqForm.get('question')?.touched"
+                            class="mt-1 text-sm text-red-600">
+                            La pregunta es obligatoria.
+                        </div>
+                    </div>
+
+                    <!-- Respuesta -->
+                    <div>
+                        <label for="answer" class="block text-sm font-medium text-gray-700 mb-2">
+                            Respuesta <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="answer" formControlName="answer"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Ingrese la respuesta detallada" rows="8"></textarea>
+                        <div *ngIf="faqForm.get('answer')?.invalid && faqForm.get('answer')?.touched"
+                            class="mt-1 text-sm text-red-600">
+                            La respuesta es obligatoria.
+                        </div>
+                    </div>
+
+                    <!-- Categoría, Orden y Estado -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                                Categoría <span class="text-red-500">*</span>
+                            </label>
+                            <select id="category" formControlName="category"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                <option value="">Seleccione una categoría</option>
+                                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                            </select>
+                            <div *ngIf="faqForm.get('category')?.invalid && faqForm.get('category')?.touched"
+                                class="mt-1 text-sm text-red-600">
+                                La categoría es obligatoria.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="order" class="block text-sm font-medium text-gray-700 mb-2">
+                                Orden <span class="text-red-500">*</span>
+                            </label>
+                            <input id="order" formControlName="order" type="number" min="0"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="0" />
+                            <p class="mt-1 text-xs text-gray-500">Define el orden de visualización</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Estado
+                            </label>
+                            <div class="flex items-center space-x-3">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" formControlName="isPublished" 
+                                        class="sr-only peer" />
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                                    </div>
+                                    <span class="ml-3 text-sm font-medium text-gray-700">
+                                        {{ faqForm.get('isPublished')?.value ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </label>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Activa o desactiva la publicación</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

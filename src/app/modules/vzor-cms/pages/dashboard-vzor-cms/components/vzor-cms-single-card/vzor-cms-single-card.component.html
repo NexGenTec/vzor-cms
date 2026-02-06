@@ -1,0 +1,31 @@
+<!-- Card -->
+<div class="flex h-[420px] flex-col rounded-lg bg-background p-8">
+  <!-- Image -->
+  <div
+  [ngStyle]="{ 
+    'background-image': 'url(' + getImageUrl() + ')', 
+    'background-position': 'center', 
+    'background-size': '60%', 
+    'background-repeat': 'no-repeat' 
+  }"
+  class="h-[340px] cursor-pointer rounded-md transition duration-150 ease-in-out hover:opacity-75">
+</div>
+  
+  <!-- Description  -->
+  <h2 class="text-md mt-6 font-semibold text-foreground">{{ getTitle() }}</h2>
+
+  <!-- Category and Type  -->
+  <div class="flex items-end justify-between text-sm font-semibold text-muted-foreground">
+    Categoría: {{ getCategory() }}
+    <span>{{ type === 'post' ? 'Post' : 'Recurso' }}</span>
+  </div>
+
+  <!-- Buttons -->
+  <div class="mt-6 flex items-center justify-between">
+    <button
+      class="hover:bg-primary-600 flex-none rounded-md bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground"
+      [routerLink]="[getRoute()]">
+      Ver {{ type === 'post' ? 'Post' : 'Recurso' }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+# Firebase ignore file
+node_modules/
+.git/
+.gitignore
+README.md
+.env
+.nyc_output
+coverage/
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+*.log

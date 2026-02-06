@@ -2,21 +2,24 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+  
 export const environment = {
   production: false,
-  nexgen: {
-    apiKey: "AIzaSyBUclhgw0asBudveCrwMvvdGiaTRe5Xlb4",
-    authDomain: "nexgenwebmaintainer.firebaseapp.com",
-    projectId: "nexgenwebmaintainer",
-    storageBucket: "nexgenwebmaintainer.firebasestorage.app",
-    messagingSenderId: "155866168020",
-    appId: "1:155866168020:web:3c7f6852ad5083fed61941",
-    measurementId: "G-4B5V1ZB8F3",
-    nombre: "NexGen Maintainer",
-    colorPrincipal: "#009688",
-    logo: "assets/logos/nexgen.png"
+  firebaseConfig: {
+    apiKey: "AIzaSyAvfPnxpQ8T4qcLkHw24PkeACT2NHuOyOw",
+    authDomain: "vzor-cms.firebaseapp.com",
+    projectId: "vzor-cms",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
+  },
+  firestoreConfig: {
+    projectId: "vzor-cms",
+    databaseId: "vzor-web"
   }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file
@@ -24,5 +27,13 @@ export const environment = {
  *
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
+ * 
+ * # Reconstruir la aplicación
+  ng build --configuration production
+
+  # Copiar archivos al directorio público
+  xcopy "dist\nex-manager\browser" "public" /E /I /Y
+
+  # Desplegar
+  firebase deploy --only hosting
  */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
