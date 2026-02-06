@@ -25,9 +25,8 @@ Iniciar el servidor
 ```
 
 ## Author
+Dread
 
-- [@NexGenTech](https://github.com/NexGenTec)
-- [@Dread](https://github.com/Dread-9)
 ## Despliegue
 
 Para desplegar este proyecto, ejecuta:
@@ -44,8 +43,6 @@ Para desplegar este proyecto, ejecuta:
 
 
 ## Soporte
-
-Para soporte, envía un correo a nexgentechnologies2024@gmail.com
 
 
 ![Logo](https://lh3.googleusercontent.com/a/ACg8ocJ1kC00P6IWGLLUMFnamSYZ_l402ptDozectaPc4QAC1yyLIJk=s576-c-no)
